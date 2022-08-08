@@ -625,8 +625,12 @@ function content_decrypt(content, password, verify = null) {
             color:white
           }
 
-          .vcontent p{
+          .vcontent p, .vnick, .vlink, .vmail, .vinput, .vsubmit{
             color:white!important
+          }
+
+          .vcontent *{
+            background-color:black!important;
           }
 
           .expand::after{
@@ -636,13 +640,13 @@ function content_decrypt(content, password, verify = null) {
           .expand::before{
             background:rgba(0, 0, 0, 0.5)!important
           }
-
+          
           pre,
     code,
     kbd,
-    samp {
+    samp{
       border-radius: 4px;
-      background-color: black;
+      background-color: black!important;
       padding-top: 4px;
       padding-bottom: 4px;
       padding-left: 12px;

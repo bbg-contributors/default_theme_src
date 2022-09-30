@@ -686,7 +686,7 @@
     }
 
     function detect_whether_ui_load_finished() {
-      if (highlight_css_import_finished === true && bootstrap_css_import_finished === true && content_load_finished === true) {
+      if (bootstrap_css_import_finished === true && content_load_finished === true) {
         document.getElementById("root").setAttribute("style", "");
         document.getElementById("loading").setAttribute("style", "display:none");
       }
@@ -1699,8 +1699,6 @@
         .get(uri)
         .then(function (response) {
           document.getElementById("highlight_css").innerHTML += response.data;
-          highlight_css_import_finished = true;
-          detect_whether_ui_load_finished();
         })
     }
 

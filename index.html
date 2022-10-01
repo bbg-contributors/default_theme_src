@@ -559,6 +559,21 @@
 
   </div>
 
+  <div class="modal fade" tabindex="-1" id="search_dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="search_dialog_title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="search_dialog_body">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
   <script src="https://unpkg.com/marked/marked.min.js"></script>
   <script src="https://unpkg.com/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
@@ -771,6 +786,31 @@
         "简体中文": "除特别声明外，本博客上的内容属于公有领域，这意味着你可以不受限制地使用和加工它们。",
         "English": "Unless otherwise stated, the content on this blog is in the public domain, which means you can use and process it without restriction.",
         "日本語": "特別な記載がない限り、このブログ内の記事はパブリックドメインであり、制限なく使用・加工できます。"
+      },
+      "SEARCH_SOMETHING":{
+        "简体中文": "在站点内搜索",
+        "English": "Search something...",
+        "日本語": "Search something..."
+      },
+      "START_SEARCH":{
+        "简体中文": "开始搜索",
+        "English": "Search",
+        "日本語": "Search"
+      },
+      "KEYWORD":{
+        "简体中文": "关键词",
+        "English": "Keyword",
+        "日本語": "Keyword"
+      },
+      "SEARCH_RESULT":{
+        "简体中文": "搜索结果",
+        "English": "Results",
+        "日本語": "Results"
+      },
+      "COULD_NOT_FIND_RESULT":{
+        "简体中文": "未找到结果",
+        "English": "Could not find a result",
+        "日本語": "Could not find a result"
       }
     }
 
@@ -784,6 +824,62 @@
     function resetPage() {
       document.querySelector("#root").innerHTML = "";
       console.log("reset ok");
+    }
+
+    function start_search(){
+      let keyword = document.getElementById("search_keyword").value;
+      let totalSearchResultNumber = 0;
+
+      document.getElementById("search_dialog_results").innerHTML = `
+      <br /><hr />
+      <h3>${langdata["SEARCH_RESULT"][lang_name]}</h3>
+      `;
+
+      for(let i=0;i<blog["文章列表"].length;i++){
+        if(blog["文章列表"][i]["文章标题"].indexOf(keyword) !== -1 || blog["文章列表"][i]["摘要"].indexOf(keyword) !== -1){
+          if(blog["文章列表"][i]["是否隐藏"] === false){
+            document.getElementById("search_dialog_results").innerHTML += `
+          <br />
+          <div class="card" style="padding:20px">
+            <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a>
+            <p>${blog["文章列表"][i]["摘要"]}</p>
+            </div>
+          
+          `;
+          totalSearchResultNumber++;
+          }
+        }
+      }
+      if(totalSearchResultNumber === 0){
+        document.getElementById("search_dialog_results").innerHTML += `
+          <br />
+          <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
+          
+          `;
+      }
+    }
+
+    function start_search_dialog(){
+      const dialog = new bootstrap.Modal(document.getElementById('search_dialog'))
+      dialog.toggle();
+
+      document.getElementById("search_dialog_title").innerHTML = langdata["SEARCH_SOMETHING"][lang_name];
+      document.getElementById("search_dialog_body").innerHTML = `
+
+      <div class="row g-2">
+  <div class="col-auto">
+    <input class="form-control" id="search_keyword" placeholder="${langdata["KEYWORD"][lang_name]}">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" onclick="start_search()"> ${langdata["START_SEARCH"][lang_name]}</button>
+  </div>
+</div>
+
+<div id="search_dialog_results">
+  
+  </div>
+      
+      `;
     }
     function render_nav(isIndexPage) {
       //todo: fix router
@@ -802,6 +898,9 @@
           <a class="nav-link" href="./index.html?type=internal&function=archive_and_tags" onclick="enter_archive_and_tags();return false;">${langdata["ARCHIVE_AND_TAGS"][lang_name]}</a>
         </li>
       </ul>
+      <div class="d-flex" role="search">
+          <button class="btn btn-outline-light" onclick="start_search_dialog()"><i class="fa fa-search"></i> ${langdata["SEARCH_SOMETHING"][lang_name]}</button>
+      </div>
     </div>
   </div>
 </nav>`;

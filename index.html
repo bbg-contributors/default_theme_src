@@ -827,7 +827,7 @@
     }
 
     function start_search(){
-      let keyword = document.getElementById("search_keyword").value;
+      let keyword = document.getElementById("search_keyword").value.toLowerCase();
       let totalSearchResultNumber = 0;
 
       document.getElementById("search_dialog_results").innerHTML = `
@@ -836,7 +836,9 @@
       `;
 
       for(let i=0;i<blog["文章列表"].length;i++){
-        if(blog["文章列表"][i]["文章标题"].indexOf(keyword) !== -1 || blog["文章列表"][i]["摘要"].indexOf(keyword) !== -1){
+        const articleTitle = blog["文章列表"][i]["文章标题"].toLowerCase();
+        const articleContent = blog["文章列表"][i]["摘要"].toLowerCase();
+        if(articleTitle.indexOf(keyword) !== -1 || articleContent.indexOf(keyword) !== -1){
           if(blog["文章列表"][i]["是否隐藏"] === false){
             document.getElementById("search_dialog_results").innerHTML += `
           <br />
@@ -844,7 +846,7 @@
             <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a>
             <p>${blog["文章列表"][i]["摘要"]}</p>
             </div>
-          
+
           `;
           totalSearchResultNumber++;
           }
@@ -854,11 +856,11 @@
         document.getElementById("search_dialog_results").innerHTML += `
           <br />
           <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
-          
+
           `;
       }
     }
-
+    
     function start_search_dialog(){
       const dialog = new bootstrap.Modal(document.getElementById('search_dialog'))
       dialog.toggle();

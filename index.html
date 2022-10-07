@@ -567,12 +567,12 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="search_dialog_body">
-          
+
         </div>
       </div>
     </div>
   </div>
-  
+
 
   <script src="https://unpkg.com/marked/marked.min.js"></script>
   <script src="https://unpkg.com/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -787,27 +787,27 @@
         "English": "Unless otherwise stated, the content on this blog is in the public domain, which means you can use and process it without restriction.",
         "日本語": "特別な記載がない限り、このブログ内の記事はパブリックドメインであり、制限なく使用・加工できます。"
       },
-      "SEARCH_SOMETHING":{
+      "SEARCH_SOMETHING": {
         "简体中文": "在站点内搜索",
         "English": "Search something...",
         "日本語": "検索..."
       },
-      "START_SEARCH":{
+      "START_SEARCH": {
         "简体中文": "开始搜索",
         "English": "Search",
         "日本語": "検索"
       },
-      "KEYWORD":{
+      "KEYWORD": {
         "简体中文": "关键词",
         "English": "Keyword",
         "日本語": "キーワード"
       },
-      "SEARCH_RESULT":{
+      "SEARCH_RESULT": {
         "简体中文": "搜索结果",
         "English": "Results",
         "日本語": "検索結果"
       },
-      "COULD_NOT_FIND_RESULT":{
+      "COULD_NOT_FIND_RESULT": {
         "简体中文": "未找到结果",
         "English": "Could not find a result",
         "日本語": "検索結果はありません"
@@ -826,8 +826,8 @@
       console.log("reset ok");
     }
 
-    function start_search(){
-      let keyword = document.getElementById("search_keyword").value;
+    function start_search() {
+      let keyword = document.getElementById("search_keyword").value.toLowerCase();
       let totalSearchResultNumber = 0;
 
       document.getElementById("search_dialog_results").innerHTML = `
@@ -835,31 +835,33 @@
       <h3>${langdata["SEARCH_RESULT"][lang_name]}</h3>
       `;
 
-      for(let i=0;i<blog["文章列表"].length;i++){
-        if(blog["文章列表"][i]["文章标题"].indexOf(keyword) !== -1 || blog["文章列表"][i]["摘要"].indexOf(keyword) !== -1){
-          if(blog["文章列表"][i]["是否隐藏"] === false){
+      for (let i = 0; i < blog["文章列表"].length; i++) {
+        const articleTitle = blog["文章列表"][i]["文章标题"].toLowerCase();
+        const articleAbstract = blog["文章列表"][i]["摘要"].toLowerCase();
+        if (articleTitle.indexOf(keyword) !== -1 || articleAbstract.indexOf(keyword) !== -1) {
+          if (blog["文章列表"][i]["是否隐藏"] === false) {
             document.getElementById("search_dialog_results").innerHTML += `
           <br />
           <div class="card" style="padding:20px">
             <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a>
             <p>${blog["文章列表"][i]["摘要"]}</p>
             </div>
-          
+
           `;
-          totalSearchResultNumber++;
+            totalSearchResultNumber++;
           }
         }
       }
-      if(totalSearchResultNumber === 0){
+      if (totalSearchResultNumber === 0) {
         document.getElementById("search_dialog_results").innerHTML += `
           <br />
           <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
-          
+
           `;
       }
     }
 
-    function start_search_dialog(){
+    function start_search_dialog() {
       const dialog = new bootstrap.Modal(document.getElementById('search_dialog'))
       dialog.toggle();
 
@@ -1101,9 +1103,9 @@
 
     function render_friend_book_list() {
       for (let i = 0; i < blog["友人帐"].length; i++) {
-        if((i%2)===0){
+        if ((i % 2) === 0) {
           render_friend_book_friend("friend_book_list1", blog["友人帐"][i]["名称"], blog["友人帐"][i]["链接"], blog["友人帐"][i]["图标"], blog["友人帐"][i]["简介"])
-        }else{
+        } else {
           render_friend_book_friend("friend_book_list2", blog["友人帐"][i]["名称"], blog["友人帐"][i]["链接"], blog["友人帐"][i]["图标"], blog["友人帐"][i]["简介"])
         }
       }

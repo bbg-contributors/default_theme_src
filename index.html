@@ -837,8 +837,8 @@
 
       for (let i = 0; i < blog["文章列表"].length; i++) {
         const articleTitle = blog["文章列表"][i]["文章标题"].toLowerCase();
-        const articleContent = blog["文章列表"][i]["摘要"].toLowerCase();
-        if (articleTitle.indexOf(keyword) !== -1 || articleContent.indexOf(keyword) !== -1) {
+        const articleAbstract = blog["文章列表"][i]["摘要"].toLowerCase();
+        if (articleTitle.indexOf(keyword) !== -1 || articleAbstract.indexOf(keyword) !== -1) {
           if (blog["文章列表"][i]["是否隐藏"] === false) {
             document.getElementById("search_dialog_results").innerHTML += `
           <br />

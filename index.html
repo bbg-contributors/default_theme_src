@@ -832,8 +832,30 @@
 
       document.getElementById("search_dialog_results").innerHTML = `
       <br /><hr />
-      <h3>${langdata["SEARCH_RESULT"][lang_name]}</h3>
       `;
+
+      if(history.state.type === "article"){
+          // 在文章内检索
+          let articleContent = document.querySelector("#article-content-html").innerText.toLowerCase();
+          if(articleContent.indexOf(keyword) !== -1){
+            document.getElementById("search_dialog_results").innerHTML += `
+          <h3>在当前文章中找到了一处结果</h3>
+          <div class="card" style="padding:20px">
+            <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="return false;"><h5>${document.getElementById("current_article_title").innerText}</h5></a>
+            <p class="search_result_detail">${articleContent.substring(articleContent.indexOf(keyword)-20, articleContent.indexOf(keyword)+20)}</p>
+          </div>
+          `;
+
+          totalSearchResultNumber++;
+          }
+          
+      }
+
+      document.getElementById("search_dialog_results").innerHTML += `
+      <br />
+          <h3>全部搜索结果</h3>
+      <br />
+          `;
 
       for (let i = 0; i < blog["文章列表"].length; i++) {
         const articleTitle = blog["文章列表"][i]["文章标题"].toLowerCase();
@@ -841,10 +863,9 @@
         if (articleTitle.indexOf(keyword) !== -1 || articleAbstract.indexOf(keyword) !== -1) {
           if (blog["文章列表"][i]["是否隐藏"] === false) {
             document.getElementById("search_dialog_results").innerHTML += `
-          <br />
           <div class="card" style="padding:20px">
             <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a>
-            <p>${blog["文章列表"][i]["摘要"]}</p>
+            <p class="search_result_detail">${blog["文章列表"][i]["摘要"]}</p>
             </div>
 
           `;
@@ -858,6 +879,10 @@
           <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
 
           `;
+      }else{
+        for(let i=0; i< document.getElementsByClassName("search_result_detail").length;i++){
+          document.getElementsByClassName("search_result_detail")[i].innerHTML = document.getElementsByClassName("search_result_detail")[i].innerHTML.replaceAll(keyword,`<span style="background-color:yellow">${keyword}</span>`)
+        }
       }
     }
 
@@ -1126,7 +1151,7 @@
         
         
             <div class="article-content" id="article-content">
-                <h2> ${blog["文章列表"][article_id]["文章标题"]}</h2>
+                <h2 id="current_article_title"> ${blog["文章列表"][article_id]["文章标题"]}</h2>
                 <div id="article-content-sub" class="article-content-sub">
                     <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][article_id]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][article_id]["修改日期"]}
                 </div>

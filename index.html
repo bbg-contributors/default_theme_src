@@ -541,6 +541,9 @@
   <style id="highlight_css">
 
   </style>
+  <style id="theme_settings">
+
+  </style>
   <style id="custom_css"></style>
   <div id="loading" style="font-family: sans-serif">
     <br /><br /><br />
@@ -1847,6 +1850,39 @@
           default:
             blogContentLicenseText = `${blog["全站内容授权协议"]}`;
         }
+
+        if(blog["使版心宽度更窄（提高左右页边距）"]){
+          document.getElementById("theme_settings").innerHTML += `
+          @media(min-width: 900px){
+          .container{
+            padding-left: 12%;
+            padding-right: 12%;
+            padding-top: 0;
+            padding-bottom: 0
+          }
+        }
+          `;
+        }
+
+        if(blog["优先使用衬线字体"]){
+          document.getElementById("theme_settings").innerHTML += `
+          * {
+            font-family: 'Noto Serif SC','Source Han Serif SC','Source Han Serif',source-han-serif-sc,'PT Serif','SongTi SC',serif;
+          }
+          `;
+        }
+
+        if(blog["全局主题设置"]["禁用导航栏的阴影效果"]){
+          document.getElementById("theme_settings").innerHTML += `
+          nav {
+      opacity: 0.9;
+      box-shadow: none;
+      padding: 0 !important;
+    }
+          `;
+        }
+
+
 
         let cdn_path = blog["CDN路径"];
 

@@ -1124,6 +1124,13 @@
                             <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}<br />
                         `;
 
+                        if(blog["不使用全站内容授权协议"] !== true && blog["文章列表"][i]["是否是短文章"]){
+            document.querySelector("#article-item-sub-" + i).innerHTML += `
+                    <i class="fa fa-copyright"></i> ${blogContentLicenseText}<br />
+                            `;
+          }
+
+
           if (blog["文章列表"][i]["标签"].length === 0) {
           } else {
             document.querySelector("#article-item-sub-" + i).innerHTML += `
@@ -1137,6 +1144,7 @@
             }
           }
 
+
           if(blog["文章列表"][i]["是否是短文章"]){
             document.querySelector("#article-item-" + i).innerHTML += `
                         <br /><div>${marked.parse(blog["文章列表"][i]["文章内容"])}</div>
@@ -1147,6 +1155,13 @@
                             `;
           }
           
+
+          if(blog["文章列表"][i]["是否是短文章"] && blog["文章列表"][i]["启用评论"] && blog["全局评论设置"]["启用valine评论"]){
+            document.querySelector("#article-item-" + i).innerHTML += `
+                    <br /><a class="btn btn-sm btn-outline-primary" href="./index.html?type=short_article&id=${blog["文章列表"][i]["标识符"]}" onclick="enter_article(${i});return false;"> <i class="fa fa-comments-o"></i> 在此文章下查看和添加评论</a>
+                            `;
+          }
+
         }
       }
 

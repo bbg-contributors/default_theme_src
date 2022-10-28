@@ -916,7 +916,7 @@
 
       <div class="row g-2">
   <div class="col-auto">
-    <input class="form-control" id="search_keyword" placeholder="${langdata["KEYWORD"][lang_name]}">
+    <input class="form-control" id="search_keyword" placeholder="${langdata["KEYWORD"][lang_name]}" autocomplete="off" autocapitalize="off" spellcheck="false">
   </div>
   <div class="col-auto">
     <button class="btn btn-primary" onclick="start_search()"> ${langdata["START_SEARCH"][lang_name]}</button>
@@ -928,6 +928,7 @@
   </div>
       
       `;
+      document.getElementById("search_keyword").addEventListener('input', start_search);
     }
     function render_nav(isIndexPage) {
       //todo: fix router

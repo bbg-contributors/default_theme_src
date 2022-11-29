@@ -2463,6 +2463,15 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
           marked.setOptions({
               renderer: markdown_renderer
             });
+         }else if(blog["Markdown渲染配置"]["使用markdown文件所在目录作为baseurl"]){
+          markdown_renderer.image = function(src, title, alt){
+            return `<img src="${baseurl}${src}" alt="${alt}" title="${title ? title : ''}" />
+            `
+          }
+          
+          marked.setOptions({
+              renderer: markdown_renderer
+            });
          }
 
         if(blog["使版心宽度更窄（提高左右页边距）"]){

@@ -97,7 +97,15 @@
       }
     }
 
+    .article_tag{
+      border-radius: 40px;
+      color:white;
+      border: none;
+    }
 
+    .article_tag::before{
+      content: "#";
+    }
 
     .article-item-sub,
     .article-content-sub {
@@ -283,6 +291,23 @@
     markdown_renderer = new marked.Renderer();
 
     baseurl = "";
+
+    String.prototype.hashCode = function() {
+      let hash = 0, i, chr;
+      if (this.length === 0) return hash;
+      for (i = 0; i < this.length; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function getTagColor(tagname){
+      let color_list = ["#000099","#330099","#660099","#990099","#cc0099","#ff0099","#0000cc","#3300cc","#6600cc","#9900cc"];
+      let color_id = parseInt(tagname.hashCode().toString().replace("-","").slice(0,1));
+      return color_list[color_id];
+    }
 
     window.onpopstate = function () {
       if (window.location.href.indexOf("#top") === -1) {
@@ -848,7 +873,7 @@
 
             for (let k = 0; k < blog["文章列表"][i]["标签"].length; k++) {
               document.querySelector("#article-item-sub-" + i).innerHTML += `
-                                <a class="btn btn-light btn-sm" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][i]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][i]["标签"][k]}');return false;">${blog["文章列表"][i]["标签"][k]}</a>
+                                <a class="btn btn-dark btn-sm article_tag" style="background-color: ${getTagColor(blog["文章列表"][i]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][i]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][i]["标签"][k]}');return false;">${blog["文章列表"][i]["标签"][k]}</a>
                                 `;
             }
           }
@@ -951,7 +976,7 @@
         ) {
           //todo:fix router 2
           document.querySelector("#article-content-sub").innerHTML += `
-            <a class="btn btn-light btn-sm" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][article_id]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][article_id]["标签"][k]}');return false;">${blog["文章列表"][article_id]["标签"][k]}</a>
+            <a class="btn btn-dark btn-sm article_tag" style="background-color:${getTagColor(blog["文章列表"][article_id]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][article_id]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][article_id]["标签"][k]}');return false;">${blog["文章列表"][article_id]["标签"][k]}</a>
             `;
         }
       }
@@ -1693,8 +1718,8 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
         // 渲染标签名字
         document.querySelector(
           "#tag-content"
-        ).innerHTML += `<h2 id="tag-content-of-tag-${Object.keys(tagtree)[i]}"><i class="fa fa-tags"></i> ${Object.keys(tagtree)[i]
-        }</h2>`;
+        ).innerHTML += `<h2 id="tag-content-of-tag-${Object.keys(tagtree)[i]}"><i class="fa fa-tags"></i> <span style="color:${getTagColor(Object.keys(tagtree)[i])}">#${Object.keys(tagtree)[i]
+        }</span></h2>`;
         for (let k = 0; k < tagtree[Object.keys(tagtree)[i]].length; k++) {
           // 遍历某个标签中的所有文章
           currentTagTreeArticleNumber = 0;
@@ -1830,7 +1855,7 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
       document.getElementById("container").innerHTML += `<div class="tag-content" id="tag-content"></div>`;
       document.querySelector(
         "#tag-content"
-      ).innerHTML += `<h2><i class="fa fa-tags"></i> 标签为 ${tagname} 下的文章</h2>`;
+      ).innerHTML += `<h2><i class="fa fa-tags"></i> 标签为  <span style="color:${getTagColor(tagname)}">#${tagname}</span> 下的文章</h2>`;
       let tagtree = getTagTree();
       for (let i = 0; i < tagtree[tagname].length; i++) {
         for (let j = 0; j < blog["文章列表"].length; j++) {

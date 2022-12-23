@@ -298,6 +298,18 @@
     const image_viewer_dialog = new bootstrap.Modal(document.getElementById('image_viewer_dialog'));
 
     markdown_renderer = new marked.Renderer();
+    
+    markdown_renderer.heading=(text, level, raw, slugger)=>{
+      return `<h${level} style="border-bottom: solid 1px rgba(137,137,137,0.3);padding-bottom: 4px"><a href="javascript:void(0)">##</a> ${text}</h${level}>`;
+    }
+
+    markdown_renderer.link=(href,title,text)=>{
+      return `<a href="${href}" title="${title}" style="text-decoration: underline"><i class="fa fa-external-link"></i> ${text}</a>`
+    }
+
+    marked.setOptions({
+      renderer: markdown_renderer
+    })
 
     baseurl = "";
 

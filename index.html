@@ -819,7 +819,16 @@
       scrollTo(0, 0);
     }
 
+    function init_article_metadata() {
+      let lst = blog["文章列表"], arc;
+      for (let i=0; i < lst.length; i++) {
+	arc = lst[i];
+	arc["是否是短文章"] = false;
+      }
+    }
+
     function render_article_list() {
+      init_article_metadata();
       for (let i = 0; i < blog["文章列表"].length; i++) {
         if (blog["文章列表"][i]["是否置顶"] && currentArticleListPageOrder === 1 && blog["文章列表"][i]["是否是短文章"] === false) {
           document.querySelector("#container").innerHTML += `

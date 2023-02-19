@@ -304,7 +304,7 @@
     }
 
     markdown_renderer.link=(href,title,text)=>{
-      return `<a href="${href}" title="${title}" style="text-decoration: underline"><i class="fa fa-external-link"></i> ${text}</a>`
+      return `<a href="${href}" ${title===null||title===undefined||title===""?"":`title="${title}"`} style="text-decoration: underline">${text}<i class="fa fa-external-link"></i></a>`
     }
 
     marked.setOptions({

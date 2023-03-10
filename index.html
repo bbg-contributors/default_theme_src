@@ -372,7 +372,7 @@
     success_locate_page_id = false;
 
     if (localStorage.getItem("is_nightmode") === null || localStorage.getItem("is_nightmode") === undefined) {
-      localStorage.setItem("is_nightmode", "off");
+      localStorage.setItem("is_nightmode", window.matchMedia('(prefers-color-scheme: dark)').matches ? "on" : "off");
     }
 
     if (localStorage.getItem("is_nightmode") === "on") {

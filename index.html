@@ -47,6 +47,50 @@
       display: none;
     }
 
+    info-hint, warning-hint, success-hint, danger-hint {
+      display: block;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 15px;
+      background-color: rgb(235, 234, 234);
+    }
+
+    .hint-heading {
+      font-size: 110%;
+    }
+
+    info-hint .hint-heading {
+      color:#0550ae;
+    }
+
+    warning-hint .hint-heading {
+      color:#ae8105;
+    }
+
+    success-hint .hint-heading {
+      color:#1b6e08;
+    }
+
+    danger-hint .hint-heading {
+      color:#ae2105;
+    }
+
+    info-hint {
+      border-left: #0550ae solid 2px;
+    }
+
+    warning-hint {
+      border-left: #ae8105 solid 2px;
+    }
+
+    success-hint {
+      border-left: #1b6e08 solid 2px;
+    }
+
+    danger-hint {
+      border-left: #ae2105 solid 2px;
+    }
+
     .article-content{
       word-break: break-all;
     }
@@ -573,6 +617,26 @@
         "English": "References",
         "日本語": "References"
       },
+      "INFO": {
+        "简体中文": "提示",
+        "English": "Hint",
+        "日本語": "Hint"
+      },
+      "WARNING": {
+        "简体中文": "注意",
+        "English": "Warning",
+        "日本語": "Warning"
+      },
+      "SUCCESS": {
+        "简体中文": "成功",
+        "English": "Success",
+        "日本語": "Success"
+      },
+      "DANGER": {
+        "简体中文": "危险",
+        "English": "Danger",
+        "日本語": "Danger"
+      },
       "COULD_NOT_FIND_RESULT": {
         "简体中文": "未找到结果",
         "English": "Could not find a result",
@@ -608,6 +672,22 @@
         document.getElementById("article-content-html").innerHTML += ref_html;
       }
     }
+
+    function render_hint_tags(){
+        for(let i = 0; i < document.getElementsByTagName("info-hint").length; i++){
+          document.getElementsByTagName("info-hint")[i].innerHTML = `<span class="hint-heading"><i class="fa fa-info-circle"></i> ${langdata["INFO"][lang_name]} </span><br />` + document.getElementsByTagName("info-hint")[i].innerHTML;
+        }
+        for(let i = 0; i < document.getElementsByTagName("warning-hint").length; i++){
+          document.getElementsByTagName("warning-hint")[i].innerHTML = `<span class="hint-heading"><i class="fa fa-exclamation-circle"></i> ${langdata["WARNING"][lang_name]} </span><br />` + document.getElementsByTagName("warning-hint")[i].innerHTML;
+        }
+        for(let i = 0; i < document.getElementsByTagName("danger-hint").length; i++){
+          document.getElementsByTagName("danger-hint")[i].innerHTML = `<span class="hint-heading"><i class="fa fa-exclamation-triangle"></i> ${langdata["DANGER"][lang_name]} </span><br />` + document.getElementsByTagName("danger-hint")[i].innerHTML;
+        }
+        for(let i = 0; i < document.getElementsByTagName("success-hint").length; i++){
+          document.getElementsByTagName("success-hint")[i].innerHTML = `<span class="hint-heading"><i class="fa fa-check-circle-o"></i> ${langdata["SUCCESS"][lang_name]} </span><br />` + document.getElementsByTagName("success-hint")[i].innerHTML;
+        }
+      }
+
 
 
     function preview_env_public_comment_fix() {
@@ -1381,7 +1461,8 @@
           document.querySelector("#article-content").innerHTML += `
             <div id="article-content-html">${marked.parse(response.data)}</div>`;
 
-            render_ref_tags()
+            render_ref_tags();
+            render_hint_tags();
 
           renderMathInElement(document.getElementById("article-content-html"),{
             delimiters: [

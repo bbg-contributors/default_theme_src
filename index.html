@@ -2229,6 +2229,15 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
       if (blog["启用自定义JS"] === true) {
         eval(blog["自定义JS"]);
       }
+      if(blog["是否启用插件功能"] === true){
+        for (const pluginObj of blog["插件列表"]) {
+          if(pluginObj["是否启用此插件"] === true){
+            console.log(`[插件加载开始] 开始加载插件${pluginObj["插件名称"]}, 插件版本${pluginObj["插件版本"]}, 插件作者${pluginObj["插件作者名"]} <${pluginObj["插件作者url"]}>`)
+            eval(pluginObj["插件内容"]);
+            console.log(`[插件加载结束] 已加载插件${pluginObj["插件名称"]}`);
+          }
+        }
+      }
     }
 
     function enter_tag(tagname) {

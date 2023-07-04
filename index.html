@@ -520,7 +520,7 @@
     content_load_finished = false;
     highlight_css_import_finished = false;
 
-    const langdata = {
+    let langdata = {
       "ARCHIVE_AND_TAGS": {
         "简体中文": "归档和标签",
         "English": "Archive and tags",
@@ -2379,6 +2379,12 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
             break;
           default:
             blogContentLicenseText = `${blog["全站内容授权协议"]}`;
+        }
+
+        if (blog["自定义界面文本"]["启用"]){
+          for (let i = 0; i < blog["自定义界面文本"]["列表"].length; i++){
+            langdata[blog["自定义界面文本"]["列表"][i]["key"]][blog["网站语言"]] = blog["自定义界面文本"]["列表"][i]["value"];
+          }
         }
 
         if(blog["Markdown渲染配置"]["根据用户屏幕尺寸渲染图片尺寸"] && blog["Markdown渲染配置"]["在用户点击图片时显示图片查看器"]){

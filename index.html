@@ -839,10 +839,6 @@
           "color:" + blog["全局主题设置"]["标题栏文字颜色"] + "!important"
         );
 
-      if (isIndexPage) {
-        document.querySelector("#navbar_title").innerHTML = "";
-      }
-
       if (blog["页面列表"].length === 0) {
       } else {
         for (let i = 0; i < blog["页面列表"].length; i++) {
@@ -934,7 +930,6 @@
     function changeArticleListPageOrderTo(page_order) {
       currentArticleListPageOrder = page_order;
       enter_indexPage();
-      scrollTo(0, 0);
     }
 
     function init_article_metadata() {
@@ -2252,6 +2247,10 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
 
       content_load_finished = true;
       detect_whether_ui_load_finished();
+
+      setTimeout(()=>{
+        scrollTo(0, 0);
+      }, 1);
     }
 
     function enter_friend_book() {
@@ -2265,6 +2264,10 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
 
       content_load_finished = true;
       detect_whether_ui_load_finished();
+
+      setTimeout(()=>{
+        scrollTo(0, 0);
+      }, 1);
 
     }
 
@@ -2281,6 +2284,10 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
 
       content_load_finished = true;
       detect_whether_ui_load_finished();
+
+      setTimeout(()=>{
+        scrollTo(0, 0);
+      }, 1);
     }
 
     function enter_indexPage() {
@@ -2298,6 +2305,11 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
 
       content_load_finished = true;
       detect_whether_ui_load_finished();
+
+      // firefox下这里如果不用setTimeout直接执行scrollTo可能会导致无法滚动
+      setTimeout(()=>{
+        scrollTo(0, 0);
+      }, 1);
     }
 
     function enter_article(article_id) {
@@ -2312,6 +2324,10 @@ if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blo
       render_nav(false);
       render_container();
       render_article_content(article_id);
+
+      setTimeout(()=>{
+        scrollTo(0, 0);
+      }, 1);
     }
 
     function getUrlArgs(variable) {

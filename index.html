@@ -742,48 +742,28 @@
         // 在文章内检索
         let articleContent = document.querySelector("#article-content-html").innerText.toLowerCase();
         if (articleContent.indexOf(keyword) !== -1) {
-          document.getElementById("search_dialog_results").insertAdjacentHTML("afterend", `
-          <h3>在当前文章中找到了一处结果</h3>
-          <div class="card" style="padding:20px">
-            <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="return false;"><h5>${document.getElementById("current_article_title").innerText}</h5></a>
-            <p class="search_result_detail">${articleContent.substring(articleContent.indexOf(keyword) - 20, articleContent.indexOf(keyword) + 20)}</p>
-          </div>
-          `);
+          document.getElementById("search_dialog_results").insertAdjacentHTML("afterend", `<h3>在当前文章中找到了一处结果</h3><div class="card" style="padding:20px"><a href="javascript:void(0)" data-bs-dismiss="modal" onclick="return false;"><h5>${document.getElementById("current_article_title").innerText}</h5></a><p class="search_result_detail">${articleContent.substring(articleContent.indexOf(keyword) - 20, articleContent.indexOf(keyword) + 20)}</p></div>`);
 
           totalSearchResultNumber++;
         }
 
       }
 
-      document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `
-      <br />
-          <h3>全部搜索结果</h3>
-      <br />
-          `);
+      document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `<br /><h3>全部搜索结果</h3><br />`);
 
       for (let i = 0; i < blog["文章列表"].length; i++) {
         const articleTitle = blog["文章列表"][i]["文章标题"].toLowerCase();
         const articleAbstract = blog["文章列表"][i]["摘要"].toLowerCase();
         if (articleTitle.indexOf(keyword) !== -1 || articleAbstract.indexOf(keyword) !== -1) {
           if (blog["文章列表"][i]["是否隐藏"] === false) {
-            document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `
-          <div class="card" style="padding:20px">
-            <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a>
-            <p class="search_result_detail">${blog["文章列表"][i]["摘要"]}</p>
-            </div>
-
-          `);
+            document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `<div class="card" style="padding:20px"><a href="javascript:void(0)" data-bs-dismiss="modal" onclick="enter_article(${i});return false;"><h5>${blog["文章列表"][i]["文章标题"]}</h5></a><p class="search_result_detail">${blog["文章列表"][i]["摘要"]}</p></div>`);
             totalSearchResultNumber++;
           }
         }
 
       }
       if (totalSearchResultNumber === 0) {
-        document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `
-          <br />
-          <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
-
-          `);
+        document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `<br /><p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>`);
       } else {
         for (let i = 0; i < document.getElementsByClassName("search_result_detail").length; i++) {
           document.getElementsByClassName("search_result_detail")[i].innerHTML = document.getElementsByClassName("search_result_detail")[i].innerHTML.replaceAll(keyword, `<span style="background-color:yellow">${keyword}</span>`)
@@ -840,21 +820,13 @@
       } else {
         for (let i = 0; i < blog["页面列表"].length; i++) {
           if (blog["页面列表"][i]["是否显示在菜单中"]) {
-            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `
-                        <li class="nav-item" id="navbar_page_${i}">
-                            <a class="nav-link" href="./index.html?type=page&filename=${blog["页面列表"][i]["文件名"]}" onclick="enter_page(${i});return false;">${blog["页面列表"][i]["若显示在菜单中，则在菜单中显示为"]}</a>
-                        </li>
-                        `);
+            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `<li class="nav-item" id="navbar_page_${i}"><a class="nav-link" href="./index.html?type=page&filename=${blog["页面列表"][i]["文件名"]}" onclick="enter_page(${i});return false;">${blog["页面列表"][i]["若显示在菜单中，则在菜单中显示为"]}</a></li>`);
           }
         }
       }
 
       if (blog["启用内建友人帐页面"] === true) {
-        document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `
-                        <li class="nav-item" id="navbar_friendbook">
-                            <a class="nav-link" href="./index.html?type=internal&function=friendbook" onclick="enter_friend_book();return false;">${langdata.FRIEND_BOOK[lang_name]}</a>
-                        </li>
-            `);
+        document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `<li class="nav-item" id="navbar_friendbook"><a class="nav-link" href="./index.html?type=internal&function=friendbook" onclick="enter_friend_book();return false;">${langdata.FRIEND_BOOK[lang_name]}</a></li>`);
 
       }
 
@@ -862,17 +834,9 @@
       } else {
         for (let i = 0; i < blog["菜单中的外部链接"].length; i++) {
           if (blog["菜单中的外部链接"][i]["是否在新标签页打开"]) {
-            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `
-                        <li class="nav-item">
-                            <a class="nav-link" target="_blank" href="${blog["菜单中的外部链接"][i]["url"]}">${blog["菜单中的外部链接"][i]["显示名称"]}</a>
-                        </li>
-                        `);
+            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `<li class="nav-item"><a class="nav-link" target="_blank" href="${blog["菜单中的外部链接"][i]["url"]}">${blog["菜单中的外部链接"][i]["显示名称"]}</a></li>`);
           } else {
-            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `
-                        <li class="nav-item">
-                            <a class="nav-link" href="${blog["菜单中的外部链接"][i]["url"]}">${blog["菜单中的外部链接"][i]["显示名称"]}</a>
-                        </li>
-                        `);
+            document.querySelector("#navbar_items").insertAdjacentHTML("beforeend", `<li class="nav-item"><a class="nav-link" href="${blog["菜单中的外部链接"][i]["url"]}">${blog["菜单中的外部链接"][i]["显示名称"]}</a></li>`);
           }
         }
       }
@@ -909,26 +873,10 @@
     function render_index_title_info() {
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 id="blog_index_title" style="font-size:50px;">${blog["博客标题"]}</h1>
-        <p id="blog_index_subtitle" style="font-size:20px;">${blog["博客描述（副标题）"]}</p>
-      </div>
-      <br /><br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="blog_index_title" style="font-size:50px;">${blog["博客标题"]}</h1><p id="blog_index_subtitle" style="font-size:20px;">${blog["博客描述（副标题）"]}</p></div><br /><br /></div>`);
 
       if (blog["启用网站公告"] === true) {
-        document.querySelector("#container").insertAdjacentHTML("beforeend", `
-          
-          <div class="article-item">
-          <h3><i class="fa fa-bullhorn" aria-hidden="true"></i> 网站公告</h3>
-          ${blog["网站公告"]}
-        
-        </div>
-          `
-        )
+        document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item"><h3><i class="fa fa-bullhorn" aria-hidden="true"></i> 网站公告</h3>${blog["网站公告"]}</div>`)
       }
     }
 
@@ -940,14 +888,7 @@
     function render_article_list() {
       for (let i = 0; i < blog["文章列表"].length; i++) {
         if (blog["文章列表"][i]["是否置顶"] && currentArticleListPageOrder === 1) {
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `
-                    <div class="article-item" id="article-item-${i}">
-                        <div class="article-item-sub"><i class="fa fa-thumb-tack"></i> 置顶文章</div>
-                        <h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2>
-                       
-                        
-                    </div>
-                        `);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><div class="article-item-sub"><i class="fa fa-thumb-tack"></i> 置顶文章</div><h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
         }
       }
 
@@ -963,41 +904,25 @@
         ) {
         } else {
 
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `
-                    <div class="article-item" id="article-item-${i}">
-                        <h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2>
-                       
-                        
-                    </div>
-                        `);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
 
 
-          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `
-                            <div class="article-item-sub" id="article-item-sub-${i}"></div>
-                            `);
+          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
 
-          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `
-                            <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div>
-                        `);
+          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div>`);
 
 
           if (blog["文章列表"][i]["标签"].length === 0) {
           } else {
-            document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `
-                            <i class="fa fa-tags"></i> ${langdata["TAGS"][lang_name]}
-                            `);
+            document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-tags"></i> ${langdata["TAGS"][lang_name]}`);
 
             for (let k = 0; k < blog["文章列表"][i]["标签"].length; k++) {
-              document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `
-                                <a class="article-tag-underlined" style="color: ${getTagColor(blog["文章列表"][i]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][i]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][i]["标签"][k]}');return false;">#${blog["文章列表"][i]["标签"][k]}</a>
-                                `);
+              document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<a class="article-tag-underlined" style="color: ${getTagColor(blog["文章列表"][i]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][i]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][i]["标签"][k]}');return false;">#${blog["文章列表"][i]["标签"][k]}</a>`);
             }
           }
 
 
-          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `
-                        <br /><p>${blog["文章列表"][i]["摘要"]}</p>
-                            `);
+          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<br /><p>${blog["文章列表"][i]["摘要"]}</p>`);
 
         }
       }
@@ -1006,26 +931,13 @@
 
         for (let i = 0; i < articleListPageLength; i++) {
           if (i + 1 === currentArticleListPageOrder) {
-            document.getElementById("container").insertAdjacentHTML("beforeend", `
-          <button class="btn btn-primary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>
-          
-          `);
+            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-primary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>`);
           } else {
-            document.getElementById("container").insertAdjacentHTML("beforeend", `
-            
-            <button class="btn btn-secondary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>
-            
-            `);
+            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-secondary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>`);
           }
         }
 
-        document.getElementById("container").insertAdjacentHTML("beforeend", `
-        <br /><br />
-        <p style="color:grey;" id="page_order_html">你当前正在浏览文章列表的第${currentArticleListPageOrder}页（共${articleListPageLength}页）。
-</p>
-        
-        
-        `);
+        document.getElementById("container").insertAdjacentHTML("beforeend", `<br /><br /><p style="color:grey;" id="page_order_html">你当前正在浏览文章列表的第${currentArticleListPageOrder}页（共${articleListPageLength}页）。</p>`);
 
       }
     }
@@ -1043,49 +955,30 @@
       }
 
       if (blog["启用网站公告"] === true && blog["网站公告仅在首页显示"] === false) {
-        document.querySelector("#container").insertAdjacentHTML("beforeend", `
-          <div class="alert alert-primary">
-
-            <i class="fa fa-bullhorn" aria-hidden="true"></i> 公告： ${blog["网站公告"]}
-</div>
-          `);
+        document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="alert alert-primary"><i class="fa fa-bullhorn" aria-hidden="true"></i> 公告： ${blog["网站公告"]}</div>`);
       }
+
+      // test
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1>
-        <div id="article-content-sub" class="article-content-sub">
-          <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div>
-                </div>
-      </div>
-      <br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1><div id="article-content-sub" class="article-content-sub"><i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div></div></div><br /></div>`);
 
       // start
 
       if (blog["文章列表"][article_id]["标签"].length === 0) {
       } else {
 
-        document.querySelector("#article-content-sub").insertAdjacentHTML("beforeend", `
-                            <i class="fa fa-tags"></i> ${langdata["TAGS"][lang_name]}
-                            `);
+        document.querySelector("#article-content-sub").insertAdjacentHTML("beforeend", `<i class="fa fa-tags"></i> ${langdata["TAGS"][lang_name]}`);
 
         for (let k = 0; k < blog["文章列表"][article_id]["标签"].length; k++) {
-          document.querySelector("#article-content-sub").insertAdjacentHTML("beforeend", `
-                                <a class="article-tag-underlined" style="color: ${getTagColor(blog["文章列表"][article_id]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][article_id]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][article_id]["标签"][k]}');return false;">#${blog["文章列表"][article_id]["标签"][k]}</a>
-                                `);
+          document.querySelector("#article-content-sub").insertAdjacentHTML("beforeend", `<a class="article-tag-underlined" style="color: ${getTagColor(blog["文章列表"][article_id]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][article_id]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][article_id]["标签"][k]}');return false;">#${blog["文章列表"][article_id]["标签"][k]}</a>`);
         }
       }
 
       // end
 
-      document.getElementById("container").insertAdjacentHTML("beforeend", `
-        <div class="article-content" id="article-content"></div>
-        `);
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="article-content" id="article-content"></div>`);
 
       document.querySelector(
         "#article-content-sub"
@@ -1098,8 +991,7 @@
           Date.parse(new Date())
         )
         .then(function (response) {
-          document.querySelector("#article-content").insertAdjacentHTML("beforeend", `
-            <div id="article-content-html">${marked.parse(response.data)}</div>`);
+          document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html">${marked.parse(response.data)}</div>`);
 
           render_ref_tags();
           render_hint_tags();
@@ -1112,142 +1004,47 @@
             ],
             throwOnError: false
           });
+          // test
           if (blog["提供文章文件下载"] || blog["提供复制全文到剪贴板的选项"]) {
-            document.getElementById("article-content").insertAdjacentHTML("beforeend", `
-            <br />
-            <div style="float:right;font-size:18px" id="article-bottom-bar">
-            
-              </div><br />
-            `)
+            document.getElementById("article-content").insertAdjacentHTML("beforeend", `<br /><div style="float:right;font-size:18px" id="article-bottom-bar"></div><br />`)
           }
 
 
 
           if (blog["提供文章文件下载"]) {
-            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `
-              <a class="btn btn-primary" href="./data/articles/${blog["文章列表"][article_id]["文件名"]}" download="${blog["文章列表"][article_id]["文章标题"]}.md"><i class="fa fa-download"></i> 将该文章下载到你的计算机上</a>
-            `);
+            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-primary" href="./data/articles/${blog["文章列表"][article_id]["文件名"]}" download="${blog["文章列表"][article_id]["文章标题"]}.md"><i class="fa fa-download"></i> 将该文章下载到你的计算机上</a>`);
           }
 
           if (blog["提供复制全文到剪贴板的选项"]) {
-            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `
-              <a class="btn btn-primary" id="copy_to_clipboard_button" onclick="copy_full_article_to_clipboard();"><i class="fa fa-clipboard"></i> 复制全文到剪贴板</a>
-            `);
+            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-primary" id="copy_to_clipboard_button" onclick="copy_full_article_to_clipboard();"><i class="fa fa-clipboard"></i> 复制全文到剪贴板</a>`);
           }
 
           if (blog["不使用全站内容授权协议"] === false) {
             document.querySelector(
               "#article-content"
-            ).insertAdjacentHTML("beforeend", `<br />
-            <div class="copyright_hint">
-              <h5>${langdata.COPYRIGHT_HINT[lang_name]}</h5>
-            <p class="mb-0">${blogContentLicenseText}</p>
-            </div>
-            
-            `);
+            ).insertAdjacentHTML("beforeend", `<br /><div class="copyright_hint"><h5>${langdata.COPYRIGHT_HINT[lang_name]}</h5><p class="mb-0">${blogContentLicenseText}</p></div>`);
           }
 
           if (blog["文章页面显示上一篇下一篇文章导航按钮"]) {
 
 
             if (article_id === 0 && blog["文章列表"][article_id + 1] != undefined && blog["文章列表"][article_id + 1]["是否隐藏"] !== true) {
-              document.getElementById("container").insertAdjacentHTML("beforeend", `
-  <div class="row">
-<div class="col">
-<div class="card articlebottomnav" style="float:left;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6>
-<h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id + 1]["文件名"]}" onclick="enter_article(${article_id + 1});return false;">${blog["文章列表"][article_id + 1]["文章标题"]}</a></h5>
-</div>
-</div>
-</div>
-<div class="col">
-<div class="card articlebottomnav" style="float:right;text-align:right;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6>
-<h5 class="card-title">${langdata.NOTHING[lang_name]}</h5>
-</div>
-</div>
-</div>
-</div>
-
-`)
+              document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="row"><div class="col"><div class="card articlebottomnav" style="float:left;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6><h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id + 1]["文件名"]}" onclick="enter_article(${article_id + 1});return false;">${blog["文章列表"][article_id + 1]["文章标题"]}</a></h5></div></div></div><div class="col"><div class="card articlebottomnav" style="float:right;text-align:right;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6><h5 class="card-title">${langdata.NOTHING[lang_name]}</h5></div></div></div></div>`)
 
             }
 
             if (article_id === 0 && blog["文章列表"][article_id + 1] == undefined) {
-              document.getElementById("container").insertAdjacentHTML("beforeend", `
-<div class="row">
-<div class="col">
-<div class="card articlebottomnav" style="float:left;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6>
-<h5 class="card-title">${langdata.NOTHING[lang_name]}</h5>
-</div>
-</div>
-</div>
-<div class="col">
-<div class="card articlebottomnav" style="float:right;text-align:right;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6>
-<h5 class="card-title">${langdata.NOTHING[lang_name]}</h5>
-</div>
-</div>
-</div>
-</div>
-
-`
-              )
+              document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="row"><div class="col"><div class="card articlebottomnav" style="float:left;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6><h5 class="card-title">${langdata.NOTHING[lang_name]}</h5></div></div></div><div class="col"><div class="card articlebottomnav" style="float:right;text-align:right;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6><h5 class="card-title">${langdata.NOTHING[lang_name]}</h5></div></div></div></div>`)
             }
 
             if (article_id !== 0 && blog["文章列表"][article_id + 1] == undefined && blog["文章列表"][article_id - 1]["是否隐藏"] !== true) {
-              document.getElementById("container").insertAdjacentHTML("beforeend", `
-  <div class="row">
-<div class="col">
-<div class="card articlebottomnav" style="float:left;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6>
-<h5 class="card-title">${langdata.NOTHING[lang_name]}</h5>
-</div>
-</div>
-</div>
-<div class="col">
-<div class="card articlebottomnav" style="float:right;text-align:right;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6>
-<h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id - 1]["文件名"]}" onclick="enter_article(${article_id - 1});return false;">${blog["文章列表"][article_id - 1]["文章标题"]}</a></h5>
-</div>
-</div>
-</div>
-</div>
-
-`
+              document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="row"><div class="col"><div class="card articlebottomnav" style="float:left;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6><h5 class="card-title">${langdata.NOTHING[lang_name]}</h5></div></div></div><div class="col"><div class="card articlebottomnav" style="float:right;text-align:right;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6><h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id - 1]["文件名"]}" onclick="enter_article(${article_id - 1});return false;">${blog["文章列表"][article_id - 1]["文章标题"]}</a></h5></div></div></div></div>`
 
               )
             }
 
             if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blog["文章列表"][article_id + 1]["是否隐藏"] !== true && blog["文章列表"][article_id - 1]["是否隐藏"] !== true) {
-              document.getElementById("container").insertAdjacentHTML("beforeend", `
-  <div class="row">
-<div class="col">
-<div class="card articlebottomnav" style="float:left;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6>
-<h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id + 1]["文件名"]}" onclick="enter_article(${article_id + 1});return false;">${blog["文章列表"][article_id + 1]["文章标题"]}</a></h5>
-</div>
-</div>
-</div>
-<div class="col">
-<div class="card articlebottomnav" style="float:right;text-align:right;width:100%">
-<div class="card-body">
-<h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6>
-<h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id - 1]["标识符"]}" onclick="enter_article(${article_id - 1});return false;">${blog["文章列表"][article_id - 1]["文章标题"]}</a></h5>
-</div>
-</div>
-</div>
-</div>
-
-`)
+              document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="row"><div class="col"><div class="card articlebottomnav" style="float:left;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-arrow-left"></i> ${langdata.PREVIOUS_POST[lang_name]}</h6><h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id + 1]["文件名"]}" onclick="enter_article(${article_id + 1});return false;">${blog["文章列表"][article_id + 1]["文章标题"]}</a></h5></div></div></div><div class="col"><div class="card articlebottomnav" style="float:right;text-align:right;width:100%"><div class="card-body"><h6 class="card-subtitle mb-2 text-muted">${langdata.NEXT_POST[lang_name]} <i class="fa fa-arrow-right"></i></h6><h5 class="card-title"><a href="./index.html?type=article&filename=${blog["文章列表"][article_id - 1]["标识符"]}" onclick="enter_article(${article_id - 1});return false;">${blog["文章列表"][article_id - 1]["文章标题"]}</a></h5></div></div></div></div>`)
 
             }
 
@@ -1309,44 +1106,17 @@
     }
 
     function render_friend_book_friend(listid, name, url, icon, description) {
-      document.getElementById(listid).insertAdjacentHTML("beforeend", `
-                <div class="card friend-card">
-                
-      <img src="${icon}" class="friend-card-img" onerror="this.src='https://images.placeholders.dev/?width=500&height=500&textColor=%23ddd&bgColor=%23ddd'">
-      <div class="card-body">
-        <h5 class="card-title"><a target="_blank" href="${url}">${name}</a></h5>
-        <p class="card-text ellipsis">${description}</p>
-      </div>
-    
-  </div>
-                
-                `);
+      document.getElementById(listid).insertAdjacentHTML("beforeend", `<div class="card friend-card"><img src="${icon}" class="friend-card-img" onerror="this.src='https://images.placeholders.dev/?width=500&height=500&textColor=%23ddd&bgColor=%23ddd'"><div class="card-body"><h5 class="card-title"><a target="_blank" href="${url}">${name}</a></h5><p class="card-text ellipsis">${description}</p></div></div>`);
     }
 
     function render_friend_book() {
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 style="font-size:50px;">${langdata.FRIEND_BOOK[lang_name]}</h1>
-      </div>
-      <br /><br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 style="font-size:50px;">${langdata.FRIEND_BOOK[lang_name]}</h1></div><br /><br /></div>`);
 
 
-      document.querySelector("#container").insertAdjacentHTML("beforeend", `
-            <div class="page-content">
-                <p>${blog["友人帐页面附加信息"]}</p>
-                
-    <div id="friend_book_list">
-      
-    </div>
-
-  </div>
-            `);
+      document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="page-content"><p>${blog["友人帐页面附加信息"]}</p><div id="friend_book_list"></div></div>`);
 
       if (blog["友人帐来自json文件"] === true) {
         axios.get(blog["若友人帐来自json文件，则地址为"]).then(
@@ -1438,14 +1208,7 @@
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 id="blog_index_title" style="font-size:50px;">${langdata["ARCHIVE_AND_TAGS"][lang_name]}</h1>
-      </div>
-      <br /><br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="blog_index_title" style="font-size:50px;">${langdata["ARCHIVE_AND_TAGS"][lang_name]}</h1></div><br /><br /></div>`);
 
       //分析标签树
 
@@ -1455,8 +1218,7 @@
         // 渲染标签名字
         document.querySelector(
           "#tag-content"
-        ).insertAdjacentHTML("beforeend", `<h2 id="tag-content-of-tag-${Object.keys(tagtree)[i]}"><i class="fa fa-tags"></i> <span style="color:${getTagColor(Object.keys(tagtree)[i])}">#${Object.keys(tagtree)[i]
-          }</span></h2>`);
+        ).insertAdjacentHTML("beforeend", `<h2 id="tag-content-of-tag-${Object.keys(tagtree)[i]}"><i class="fa fa-tags"></i> <span style="color:${getTagColor(Object.keys(tagtree)[i])}">#${Object.keys(tagtree)[i]}</span></h2>`);
         for (let k = 0; k < tagtree[Object.keys(tagtree)[i]].length; k++) {
           // 遍历某个标签中的所有文章
           currentTagTreeArticleNumber = 0;
@@ -1467,10 +1229,7 @@
             if (tagtree[Object.keys(tagtree)[i]][k] === blog["文章列表"][j] && blog["文章列表"][j]["是否隐藏"] === false) {
               document.querySelector(
                 "#tag-content"
-              ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[Object.keys(tagtree)[i]][k]["文章标题"]
-                }</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["创建日期"]
-                }，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["修改日期"]
-                }）</p>`);
+              ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[Object.keys(tagtree)[i]][k]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["修改日期"]}）</p>`);
 
 
               currentTagTreeArticleNumber++;
@@ -1486,53 +1245,22 @@
       }
 
       if (getTagTreeLength() === 0) {
-        document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `
-          <h3><i class="fa fa-tags"></i> 未分类文章</h3>
-
-          `);
+        document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<h3><i class="fa fa-tags"></i> 未分类文章</h3>`);
 
         for (let i = 0; i < blog["文章列表"].length; i++) {
           if (blog["文章列表"][i]["是否隐藏"] === false) {
-            document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `
-            <p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>
-              
-              （
-              <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}
-              ${blog["文章列表"][i]["创建日期"]}，
-              <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}
-              ${blog["文章列表"][i]["修改日期"]}
-              
-              ）
-              
-              </p>
-
-          `);
+            document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
 
           }
         }
       } else {
         if (totalTagTreeArticleLength < blog["文章列表"].length) {
-          document.getElementById("tag-content").insertAdjacentHTML("beforeend", `
-            <h3><i class="fa fa-tags"></i> 未分类文章</h3>
-            `);
+          document.getElementById("tag-content").insertAdjacentHTML("beforeend", `<h3><i class="fa fa-tags"></i> 未分类文章</h3>`);
 
           for (let i = 0; i < blog["文章列表"].length; i++) {
             if (blog["文章列表"][i]["是否隐藏"] === false) {
               if (blog["文章列表"][i]["标签"].length === 0 || blog["文章列表"][i]["标签"] === false || blog["文章列表"][i]["标签"] === "" || blog["文章列表"][i]["标签"] === undefined || blog["文章列表"][i]["标签"] === null) {
-                document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `
-            <p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>
-              
-              （
-              <i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}
-              ${blog["文章列表"][i]["创建日期"]}，
-              <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}
-              ${blog["文章列表"][i]["修改日期"]}
-              
-              ）
-              
-              </p>
-
-          `);
+                document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
               }
 
             }
@@ -1546,14 +1274,7 @@
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 style="font-size:50px;"<i class="fa fa-tags"></i> 标签为  <span style="color:${getTagColor(tagname)}">#${tagname}</span> 下的文章</h1>
-      </div>
-      <br /><br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 style="font-size:50px;"<i class="fa fa-tags"></i> 标签为  <span style="color:${getTagColor(tagname)}">#${tagname}</span> 下的文章</h1></div><br /><br /></div>`);
 
       document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="tag-content" id="tag-content"></div>`);
       let tagtree = getTagTree();
@@ -1576,24 +1297,12 @@
       }
 
       if (blog["启用网站公告"] === true && blog["网站公告仅在首页显示"] === false) {
-        document.querySelector("#container").insertAdjacentHTML("beforeend", `
-          <div class="alert alert-primary">
-
-            <i class="fa fa-bullhorn" aria-hidden="true"></i> 公告： ${blog["网站公告"]}
-</div>
-          `)
+        document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="alert alert-primary"><i class="fa fa-bullhorn" aria-hidden="true"></i> 公告： ${blog["网站公告"]}</div>`)
       }
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light">
-        <br /><br /><br /><br />
-      <div class="container blog_title_jumbotron">
-        <h1 style="font-size:50px;">${blog["页面列表"][page_id]["页面标题"]}</h1>
-      </div>
-      <br /><br />
-    </div>
-        `);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 style="font-size:50px;">${blog["页面列表"][page_id]["页面标题"]}</h1></div><br /><br /></div>`);
 
       document.querySelector(
         "#container"
@@ -1609,13 +1318,7 @@
         .then(function (response) {
           document.querySelector("#page-content").insertAdjacentHTML("beforeend", `<div id="page-content-html">${marked.parse(response.data)}</div>`);
           if (blog["不使用全站内容授权协议"] === false) {
-            document.getElementById("page-content").insertAdjacentHTML("beforeend", `<br />
-            <div class="copyright_hint">
-              <h5>${langdata.COPYRIGHT_HINT[lang_name]}</h5>
-              <p class="mb-0">${blogContentLicenseText}</p>
-            </div>
-            
-            `);
+            document.getElementById("page-content").insertAdjacentHTML("beforeend", `<br /><div class="copyright_hint"><h5>${langdata.COPYRIGHT_HINT[lang_name]}</h5><p class="mb-0">${blogContentLicenseText}</p></div>`);
           }
 
           // 评论
@@ -1699,13 +1402,7 @@
     }
 
     function render_bottom_information() {
-      document.getElementById("container").insertAdjacentHTML("beforeend", `
-            <hr />
-            <div style="color:grey" id="bottom_info_html">
-                ${marked.parse(blog["底部信息（格式为markdown）"])}
-            </div>
-            
-            `);
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<hr /><div style="color:grey" id="bottom_info_html">${marked.parse(blog["底部信息（格式为markdown）"])}</div>`);
     }
 
     function execute_custom_js() {
@@ -1912,39 +1609,15 @@
         }
 
         if (blog["使版心宽度更窄（提高左右页边距）"]) {
-          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `
-          @media(min-width: 1000px){
-          .container{
-            padding-left: 12%;
-            padding-right: 12%;
-            padding-top: 0;
-            padding-bottom: 0
-          }
-
-          #blog_title_jumbotron {
-            padding-left: 12%;
-            padding-right: 12%;
-          }
-        }
-          `);
+          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `@media(min-width: 1000px){.container{padding-left: 12%;padding-right: 12%;padding-top: 0;padding-bottom: 0}#blog_title_jumbotron {padding-left: 12%;padding-right: 12%;}}`);
         }
 
         if (blog["优先使用衬线字体"]) {
-          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `
-          * {
-            font-family: 'Noto Serif SC','Source Han Serif SC','Source Han Serif',source-han-serif-sc,'PT Serif','SongTi SC',serif;
-          }
-          `);
+          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `* {font-family: 'Noto Serif SC','Source Han Serif SC','Source Han Serif',source-han-serif-sc,'PT Serif','SongTi SC',serif;}`);
         }
 
         if (blog["全局主题设置"]["禁用导航栏的阴影效果"]) {
-          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `
-          nav {
-      opacity: 0.9;
-      box-shadow: none;
-      padding: 0 !important;
-    }
-          `);
+          document.getElementById("theme_settings").insertAdjacentHTML("beforeend", `nav {opacity: 0.9;box-shadow: none;padding: 0 !important;}`);
         }
 
 
@@ -1988,23 +1661,17 @@
         // 网页背景载入
 
         if (blog["全局主题设置"]["是否使用纯色背景（优先级高于背景图像）"]) {
-          document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{
-            background: ${blog["全局主题设置"]["若使用纯色背景，颜色为"]};
-          }`);
+          document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{background: ${blog["全局主题设置"]["若使用纯色背景，颜色为"]};}`);
         } else if (blog["全局主题设置"]["是否使用背景图像"]) {
 
           if (blog["全局主题设置"]["若使用背景图像，设置为"]["将网站根目录下的background.webp作为背景图像"]) {
-            document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{
-              background: url(./background.webp) center/cover;
-            }`);
+            document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{background: url(./background.webp) center/cover;}`);
           } else if (
             blog["全局主题设置"]["若使用背景图像，设置为"][
             "将某个url作为背景图像"
             ]
           ) {
-            document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{
-              background: url(${blog["全局主题设置"]["若使用背景图像，设置为"]["若将某个url作为背景图像，这个url是"]}) center/cover;
-            }`);
+            document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{background: url(${blog["全局主题设置"]["若使用背景图像，设置为"]["若将某个url作为背景图像，这个url是"]}) center/cover;}`);
           }
         }
 

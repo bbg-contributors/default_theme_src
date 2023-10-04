@@ -306,27 +306,114 @@
       white-space: pre-wrap;
     }
 
-    #night_mode_btn {
-      position: fixed;
-      z-index: 99;
-      right: 20px;
-      bottom: 20px;
-    }
-
     #back_to_top_btn {
       position: fixed;
       z-index: 99;
       right: 20px;
-      bottom: 60px;
+      bottom: 30px;
     }
 
-    #night_mode_btn * i,
     #back_to_top_btn * i {
       width: 0.7em;
     }
-  </style>
-  <style id="whether_nightmode">
 
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #000000c7;
+
+      }
+
+      #blog_index_title,
+      #blog_index_subtitle,
+      .article-content h2,
+      .page-content h2,
+      #article-content-html p,
+      #page-content-html p {
+        color: white;
+      }
+
+      .article-item,
+      .article-content,
+      .page-content {
+        background-color: #000000a8
+      }
+
+      .article-item p,
+      .article-item-sub,
+      .article-content-sub,
+      #page_order_html,
+      #bottom_info_html {
+        color: lightgrey !important;
+      }
+
+      a {
+        color: #67a5ff
+      }
+
+      .card,
+      #tag-content {
+        background-color: black;
+        color: white
+      }
+
+      ul,
+      ol,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      th,
+      td,
+      .vcontent *,
+      #veditor {
+        color: white
+      }
+
+      .vcontent p,
+      .vnick,
+      .vlink,
+      .vmail,
+      .vinput,
+      .vsubmit {
+        color: white !important
+      }
+
+      .vcontent * {
+        background-color: black !important;
+      }
+
+      .expand::after {
+        background: black !important;
+        color: white !important;
+      }
+
+      .expand::before {
+        background: rgba(0, 0, 0, 0.5) !important
+      }
+
+      pre,
+      code,
+      kbd,
+      samp {
+        border-radius: 4px;
+        background-color: black !important;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 12px;
+        padding-right: 12px;
+        display: inline-block;
+      }
+
+      .bbg-comment-area {
+        background-color: black;
+        color: white
+      }
+
+
+    }
   </style>
   <style id="highlight_css">
 
@@ -346,10 +433,6 @@
   <div id="root" style="display:none;"></div>
   <div id="back_to_top_btn">
     <a href="javascript:scrollTo(0,0);" class="btn btn-secondary"><i class="fa fa-angle-up"></i></a>
-  </div>
-  <div id="night_mode_btn">
-    <button class="btn btn-secondary" onclick="switch_night_mode()"><i class="fa fa-moon-o"></i></button>
-
   </div>
 
   <div class="modal" tabindex="-1" id="search_dialog">
@@ -472,92 +555,6 @@
 
     success_locate_article_id = false;
     success_locate_page_id = false;
-
-    if (localStorage.getItem("is_nightmode") === null || localStorage.getItem("is_nightmode") === undefined) {
-      localStorage.setItem("is_nightmode", window.matchMedia('(prefers-color-scheme: dark)').matches ? "on" : "off");
-    }
-
-    if (localStorage.getItem("is_nightmode") === "on") {
-      switch_to_night_mode();
-    }
-
-    function switch_to_night_mode() {
-      document.getElementById("whether_nightmode").innerHTML = `
-          body{
-            background-color:#000000c7;
-            
-          }
-          #blog_index_title,#blog_index_subtitle, .article-content h2,.page-content h2, #article-content-html p, #page-content-html p{
-            color:white;
-          }
-
-          .article-item, .article-content, .page-content{
-            background-color:#000000a8
-          }
-          .article-item p, .article-item-sub, .article-content-sub, #page_order_html, #bottom_info_html{
-            color:lightgrey!important;
-          }
-          a{
-            color:#67a5ff
-          }
-          .card, #tag-content{
-            background-color:black;
-            color:white
-          }
-
-          ul,ol,li,h1,h2,h3,h4,h5,h6,th,td,.vcontent *, #veditor{
-            color:white
-          }
-
-          .vcontent p, .vnick, .vlink, .vmail, .vinput, .vsubmit{
-            color:white!important
-          }
-
-          .vcontent *{
-            background-color:black!important;
-          }
-
-          .expand::after{
-            background:black!important;
-            color:white!important;
-          }
-          .expand::before{
-            background:rgba(0, 0, 0, 0.5)!important
-          }
-          
-          pre,
-    code,
-    kbd,
-    samp{
-      border-radius: 4px;
-      background-color: black!important;
-      padding-top: 4px;
-      padding-bottom: 4px;
-      padding-left: 12px;
-      padding-right: 12px;
-      display: inline-block;
-    }
-
-    .bbg-comment-area{
-      background-color:black;
-      color:white
-    }
-          `;
-      localStorage.setItem("is_nightmode", "on");
-    }
-
-    function switch_to_light_mode() {
-      document.getElementById("whether_nightmode").innerHTML = "";
-      localStorage.setItem("is_nightmode", "off");
-    }
-
-    function switch_night_mode() {
-      if (localStorage.getItem("is_nightmode") === "off") {
-        switch_to_night_mode();
-      } else if (localStorage.getItem("is_nightmode") === "on") {
-        switch_to_light_mode();
-      }
-    }
 
     function detect_whether_ui_load_finished() {
       if (bootstrap_css_import_finished === true && content_load_finished === true) {
@@ -768,7 +765,7 @@
         // 在文章内检索
         let articleContent = document.querySelector("#article-content-html").innerText.toLowerCase();
         if (articleContent.indexOf(keyword) !== -1) {
-          document.getElementById("search_dialog_results").insertAdjacentHTML("afterend",`
+          document.getElementById("search_dialog_results").insertAdjacentHTML("afterend", `
           <h3>在当前文章中找到了一处结果</h3>
           <div class="card" style="padding:20px">
             <a href="javascript:void(0)" data-bs-dismiss="modal" onclick="return false;"><h5>${document.getElementById("current_article_title").innerText}</h5></a>
@@ -781,7 +778,7 @@
 
       }
 
-      document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend",`
+      document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `
       <br />
           <h3>全部搜索结果</h3>
       <br />
@@ -805,7 +802,7 @@
 
       }
       if (totalSearchResultNumber === 0) {
-        document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend",`
+        document.getElementById("search_dialog_results").insertAdjacentHTML("beforeend", `
           <br />
           <p>${langdata["COULD_NOT_FIND_RESULT"][lang_name]}</p>
 
@@ -969,7 +966,8 @@
         
         </div>
           `
-      )}
+        )
+      }
     }
 
     function changeArticleListPageOrderTo(page_order) {
@@ -1237,7 +1235,8 @@
 </div>
 
 `
-        )}
+              )
+            }
 
             if (article_id !== 0 && blog["文章列表"][article_id + 1] == undefined && blog["文章列表"][article_id - 1]["是否隐藏"] !== true) {
               document.getElementById("container").insertAdjacentHTML("beforeend", `
@@ -1262,7 +1261,8 @@
 
 `
 
-        )}
+              )
+            }
 
             if (article_id !== 0 && blog["文章列表"][article_id + 1] != undefined && blog["文章列表"][article_id + 1]["是否隐藏"] !== true && blog["文章列表"][article_id - 1]["是否隐藏"] !== true) {
               document.getElementById("container").insertAdjacentHTML("beforeend", `
@@ -1347,7 +1347,7 @@
     }
 
     function render_friend_book_friend(listid, name, url, icon, description) {
-      document.getElementById(listid).insertAdjacentHTML("beforeend",`
+      document.getElementById(listid).insertAdjacentHTML("beforeend", `
                 <div class="card friend-card">
                 
       <img src="${icon}" class="friend-card-img" onerror="this.src='https://images.placeholders.dev/?width=500&height=500&textColor=%23ddd&bgColor=%23ddd'">
@@ -1375,7 +1375,7 @@
         `);
 
 
-      document.querySelector("#container").insertAdjacentHTML("beforeend",`
+      document.querySelector("#container").insertAdjacentHTML("beforeend", `
             <div class="page-content">
                 <p>${blog["友人帐页面附加信息"]}</p>
                 
@@ -1494,7 +1494,7 @@
         document.querySelector(
           "#tag-content"
         ).insertAdjacentHTML("beforeend", `<h2 id="tag-content-of-tag-${Object.keys(tagtree)[i]}"><i class="fa fa-tags"></i> <span style="color:${getTagColor(Object.keys(tagtree)[i])}">#${Object.keys(tagtree)[i]
-        }</span></h2>`);
+          }</span></h2>`);
         for (let k = 0; k < tagtree[Object.keys(tagtree)[i]].length; k++) {
           // 遍历某个标签中的所有文章
           currentTagTreeArticleNumber = 0;
@@ -1506,7 +1506,7 @@
               document.querySelector(
                 "#tag-content"
               ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[Object.keys(tagtree)[i]][k]["文章标题"]
-              }</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["创建日期"]
+                }</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["创建日期"]
                 }，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["修改日期"]
                 }）</p>`);
 
@@ -1647,7 +1647,7 @@
         .then(function (response) {
           document.querySelector("#page-content").insertAdjacentHTML("beforeend", `<div id="page-content-html">${marked.parse(response.data)}</div>`);
           if (blog["不使用全站内容授权协议"] === false) {
-            document.getElementById("page-content").insertAdjacentHTML("beforeend",`<br />
+            document.getElementById("page-content").insertAdjacentHTML("beforeend", `<br />
             <div class="copyright_hint">
               <h5>${langdata.COPYRIGHT_HINT[lang_name]}</h5>
               <p class="mb-0">${blogContentLicenseText}</p>

@@ -29,7 +29,7 @@
   </style>
   <style id="blogcss">
     * {
-      font-family: 'Noto Sans SC', sans-serif;
+      font-family: 'Noto Sans SC', sans-serif, 'KaTeX_Main', 'Times New Roman', serif;
     }
 
     .article-item,
@@ -168,6 +168,10 @@
       width: 100%;
     }
 
+    .title_that_should_not_have_underline {
+      text-decoration: none!important;
+    }
+
     @media (max-width: 1050px) {
       #empty_friend_book_list {
         display: none;
@@ -211,6 +215,7 @@
     .article-tag-underlined {
       text-decoration: 1px underline;
       text-underline-position: under;
+      margin-left: 8px;
     }
 
     nav {
@@ -475,7 +480,7 @@
     markdown_renderer = new marked.Renderer();
 
     markdown_renderer.heading = (text, level, raw, slugger) => {
-      return `<h${level} style="border-bottom: solid 1px rgba(137,137,137,0.3);padding-bottom: 4px"><a href="javascript:void(0)">##</a> ${text}</h${level}>`;
+      return `<h${level} style="border-bottom: solid 1px rgba(137,137,137,0.3);padding-bottom: 4px"><a href="javascript:void(0)" class="title_that_should_not_have_underline">##</a> ${text}</h${level}>`;
     }
 
     markdown_renderer.link = (href, title, text) => {
@@ -1731,7 +1736,7 @@
 
         // load custom link color
 
-        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `a{color:${blog["全局主题设置"]["链接颜色"]}}.underline-animation {position: relative;text-decoration: none;}.underline-animation::before {content: "";position: absolute;display: block;width: 100%;height: 2px;bottom: 0;left: 0;background-color: ${blog["全局主题设置"]["链接颜色"]};transform: scaleX(0);transition: transform 0.3s ease;}.underline-animation:hover::before{transform: scaleX(1);}`);
+        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `a{color:${blog["全局主题设置"]["链接颜色"]}}a:hover{color:${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["链接颜色"])}}a:active{${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["链接颜色"])}}.underline-animation {position: relative;text-decoration: none;}.underline-animation::before {content: "";position: absolute;display: block;width: 100%;height: 2px;bottom: 0;left: 0;background-color: ${blog["全局主题设置"]["链接颜色"]};transform: scaleX(0);transition: transform 0.3s ease;}.underline-animation:hover::before{transform: scaleX(1);}`);
 
         // 自定义css载入
 

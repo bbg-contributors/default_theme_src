@@ -164,16 +164,9 @@
     }
 
     @media (max-width: 1050px) {
-
       #empty_friend_book_list {
-
         display: none;
-
-
       }
-
-
-
     }
 
     @media (max-width: 520px) {
@@ -411,8 +404,6 @@
         background-color: black;
         color: white
       }
-
-
     }
   </style>
   <style id="highlight_css">
@@ -443,7 +434,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="search_dialog_body">
-
         </div>
       </div>
     </div>
@@ -457,7 +447,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="image_viewer_dialog_body">
-
         </div>
       </div>
     </div>
@@ -522,17 +511,7 @@
     }
 
     function openImageViewer(url) {
-      document.querySelector("#image_viewer_dialog_body").innerHTML = `
-      <button onclick="window.open('${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}')" class="btn btn-success"><i class="fa fa-file-image-o"></i> 在新标签页打开此图像</button>
-      <br />
-      <br />
-      <img src="${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}" style="max-width: 100%" />
-      <br />
-      <br />
-      <button onclick="window.open('${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}')" class="btn btn-success"><i class="fa fa-file-image-o"></i> 在新标签页打开此图像</button>
-      <button onclick="image_viewer_dialog.hide()" class="btn btn-primary"><i class="fa fa-times"></i> 关闭此对话框</button>
-
-      `;
+      document.querySelector("#image_viewer_dialog_body").innerHTML = `<button onclick="window.open('${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}')" class="btn btn-success"><i class="fa fa-file-image-o"></i> 在新标签页打开此图像</button><br /><br /><img src="${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}" style="max-width: 100%" /><br /><br /><button onclick="window.open('${url.indexOf("https://") === -1 && url.indexOf("http://") === -1 ? baseurl : ""}${url}')" class="btn btn-success"><i class="fa fa-file-image-o"></i> 在新标签页打开此图像</button><button onclick="image_viewer_dialog.hide()" class="btn btn-primary"><i class="fa fa-times"></i> 关闭此对话框</button>`;
       image_viewer_dialog.toggle();
     }
 
@@ -757,9 +736,7 @@
       let keyword = document.getElementById("search_keyword").value.toLowerCase();
       let totalSearchResultNumber = 0;
 
-      document.getElementById("search_dialog_results").innerHTML = `
-      <br /><hr />
-      `;
+      document.getElementById("search_dialog_results").innerHTML = `<br /><hr />`;
 
       if (history.state.type === "article" || history.state.type === "short_article") {
         // 在文章内检索
@@ -819,22 +796,7 @@
       dialog.toggle();
 
       document.getElementById("search_dialog_title").innerHTML = langdata["SEARCH_SOMETHING"][lang_name];
-      document.getElementById("search_dialog_body").innerHTML = `
-
-      <div class="row g-2">
-  <div class="col-auto">
-    <input class="form-control" id="search_keyword" placeholder="${langdata["KEYWORD"][lang_name]}" autocomplete="off" autocapitalize="off" spellcheck="false">
-  </div>
-  <div class="col-auto">
-    <button class="btn btn-primary" onclick="start_search()"> ${langdata["START_SEARCH"][lang_name]}</button>
-  </div>
-</div>
-
-<div id="search_dialog_results">
-  
-  </div>
-      
-      `;
+      document.getElementById("search_dialog_body").innerHTML = `<div class="row g-2"><div class="col-auto"><input class="form-control" id="search_keyword" placeholder="${langdata["KEYWORD"][lang_name]}" autocomplete="off" autocapitalize="off" spellcheck="false"></div><div class="col-auto"><button class="btn btn-primary" onclick="start_search()"> ${langdata["START_SEARCH"][lang_name]}</button></div></div><div id="search_dialog_results"></div>`;
       document.getElementById("search_keyword").focus();
       document.getElementById("search_keyword").addEventListener('input', start_search);
     }
@@ -2064,13 +2026,7 @@
           if (success_locate_article_id !== true) {
             document.getElementById("root").setAttribute("style", "");
             document.getElementById("loading").setAttribute("style", "display:none;");
-            document.getElementById("root").innerHTML = `
-            <div style="text-align:center">
-              <br />
-            <h3>此文章不存在或已被删除</h3>
-            <p>This article does not exist or has already been deleted.</p>
-            </div>
-            `;
+            document.getElementById("root").innerHTML = `<div style="text-align:center"><br /><h3>此文章不存在或已被删除</h3><p>This article does not exist or has already been deleted.</p></div>`;
           }
         }
 
@@ -2085,13 +2041,7 @@
           if (success_locate_article_id !== true) {
             document.getElementById("root").setAttribute("style", "");
             document.getElementById("loading").setAttribute("style", "display:none;");
-            document.getElementById("root").innerHTML = `
-            <div style="text-align:center">
-              <br />
-            <h3>此文章不存在或已被删除</h3>
-            <p>This article does not exist or has already been deleted.</p>
-            </div>
-            `;
+            document.getElementById("root").innerHTML = `<div style="text-align:center"><br /><h3>此文章不存在或已被删除</h3><p>This article does not exist or has already been deleted.</p></div>`;
           }
         }
 
@@ -2106,13 +2056,7 @@
           if (success_locate_page_id !== true) {
             document.getElementById("root").setAttribute("style", "");
             document.getElementById("loading").setAttribute("style", "display:none;");
-            document.getElementById("root").innerHTML = `
-            <div style="text-align:center">
-              <br />
-            <h3>此页面不存在或已被删除</h3>
-            <p>This page does not exist or has already been deleted.</p>
-            </div>
-            `;
+            document.getElementById("root").innerHTML = `<div style="text-align:center"><br /><h3>此页面不存在或已被删除</h3><p>This page does not exist or has already been deleted.</p></div>`;
           }
         }
 

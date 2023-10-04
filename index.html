@@ -142,6 +142,11 @@
       margin: 0;
       margin-bottom: 5px;
       margin-right: 5px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .friend-card:hover {
+      box-shadow: 0 3px 1px -2px rgb(0 0 0 / 60%), 0 2px 2px 0 rgb(0 0 0 / 36%), 0 1px 5px 0 rgb(0 0 0 / 32%);
     }
 
     .friend-card h5 {
@@ -337,10 +342,6 @@
       #page_order_html,
       #bottom_info_html {
         color: lightgrey !important;
-      }
-
-      a {
-        color: #67a5ff
       }
 
       .card,
@@ -888,7 +889,7 @@
     function render_article_list() {
       for (let i = 0; i < blog["文章列表"].length; i++) {
         if (blog["文章列表"][i]["是否置顶"] && currentArticleListPageOrder === 1) {
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><div class="article-item-sub"><i class="fa fa-thumb-tack"></i> 置顶文章</div><h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><div class="article-item-sub"><i class="fa fa-thumb-tack"></i> 置顶文章</div><h2><a class="underline-animation" href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
         }
       }
 
@@ -904,7 +905,7 @@
         ) {
         } else {
 
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a class="underline-animation" href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
 
 
           document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
@@ -978,7 +979,7 @@
 
       // end
 
-      document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="article-content" id="article-content"></div>`);
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="article-content" id="article-content"><div id="loading_article_or_page_content"><div class="spinner-border text-primary" role="status"></div></div></div>`);
 
       document.querySelector(
         "#article-content-sub"
@@ -991,6 +992,7 @@
           Date.parse(new Date())
         )
         .then(function (response) {
+          document.getElementById("loading_article_or_page_content").remove();
           document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html">${marked.parse(response.data)}</div>`);
 
           render_ref_tags();
@@ -1674,6 +1676,62 @@
             document.querySelector("#blogcss").insertAdjacentHTML("beforeend", `body:before{background: url(${blog["全局主题设置"]["若使用背景图像，设置为"]["若将某个url作为背景图像，这个url是"]}) center/cover;}`);
           }
         }
+
+        // css for .nav-item
+
+        function hexToRgbInNavItemCss(hex) {
+          hex = hex.replace(/^#/, '').trim();
+
+          const r = parseInt(hex.slice(0, 2), 16);
+          const g = parseInt(hex.slice(2, 4), 16);
+          const b = parseInt(hex.slice(4, 6), 16);
+
+          return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function rgbAdjustmentInNavItemCss(rgb) {
+          const rgbString = rgb;
+          const rgbArray = rgbString.match(/\d+/g);
+          let [r, g, b] = rgbArray;
+          r = parseInt(r);
+          g = parseInt(g);
+          b = parseInt(b);
+          if (r + 30<255){
+            r += 30;
+          } else {
+            r = 255;
+          }
+          if(b+30<255){
+            b += 30;
+          } else {
+            b = 255;
+          }
+          if(g+30<255){
+            g += 30;
+          } else {
+            g = 255;
+          }
+          return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function processed_color_for_nav_item_hover_css(color){
+          if(color.includes("rgb") === true && color.includes("rgba") === false){
+            // is rgb color
+            return rgbAdjustmentInNavItemCss(color);
+          } else if(color.includes("#") === true){
+            // is hex color
+            return rgbAdjustmentInNavItemCss(hexToRgbInNavItemCss(color));
+          } else {
+            // unable to detect color type
+            return color;
+          }
+        }
+
+        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `.nav-item {background-color:${blog["全局主题设置"]["标题栏背景颜色"]}!important}.nav-item:hover{background-color:${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["标题栏背景颜色"])}!important;transition: background-color 0.1s;}`);
+
+        // load custom link color
+
+        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `a{color:${blog["全局主题设置"]["链接颜色"]}}.underline-animation {position: relative;text-decoration: none;}.underline-animation::before {content: "";position: absolute;display: block;width: 100%;height: 2px;bottom: 0;left: 0;background-color: ${blog["全局主题设置"]["链接颜色"]};transform: scaleX(0);transition: transform 0.3s ease;}.underline-animation:hover::before{transform: scaleX(1);}`);
 
         // 自定义css载入
 

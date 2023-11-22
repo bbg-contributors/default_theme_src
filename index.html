@@ -1013,7 +1013,7 @@
             }
 
           } else {
-            document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html">${marked.parse(articleContentData)}</div>`);
+            document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html">${marked.parse(response.data)}</div>`);
           }
 
 

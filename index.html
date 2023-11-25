@@ -8,6 +8,7 @@
   <title></title>
   <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/katex@0.16.3/dist/katex.min.css">
+  <link rel='stylesheet' href="https://unpkg.com/@waline/client@2.15.8/dist/waline.css">
   <link href="https://google-fonts.mirrors.sjtug.sjtu.edu.cn/css?family=Noto+Sans+SC" rel="stylesheet">
 </head>
 
@@ -471,6 +472,7 @@
   <script src="https://unpkg.com/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
   <script src="https://unpkg.com/valine@1.5.1/dist/Valine.min.js"></script>
+  <script src="https://unpkg.com/@waline/client@2.15.8/dist/waline.js"></script>
   <script src="https://unpkg.com/@highlightjs/cdn-assets@11.5.1/highlight.min.js"></script>
   <script src="https://unpkg.com/sjcl@1.0.8/sjcl.js"></script>
   <script src="https://unpkg.com/katex@0.16.3/dist/katex.min.js"></script>
@@ -1078,9 +1080,9 @@
 
 
           if (
-            blog["全局评论设置"]["启用valine评论"] &&
-            blog["文章列表"][article_id]["启用评论"] ||
-            blog["全局评论设置"]["启用disqus评论"] &&
+            (blog["全局评论设置"]["启用valine评论"] ||
+            blog["全局评论设置"]["启用disqus评论"] ||
+            blog["全局评论设置"]["启用waline评论"]) &&
             blog["文章列表"][article_id]["启用评论"]
           ) {
             document.querySelector(
@@ -1125,6 +1127,19 @@
             })();
           }
 
+          if (
+            blog["全局评论设置"]["启用waline评论"] &&
+            blog["文章列表"][article_id]["启用评论"]
+          ) {
+            Waline.init({
+              el: "#vcomments",
+              serverURL: blog["全局评论设置"]["waline设置"]["serverurl"],
+              path:
+                "article=" +
+                blog["文章列表"][article_id]["文件名"],
+            });
+          }
+
 
         })
     }
@@ -1153,9 +1168,9 @@
       }
 
       if (
-        blog["全局评论设置"]["启用valine评论"] &&
-        blog["友人帐页面允许评论"] ||
-        blog["全局评论设置"]["启用disqus评论"] &&
+        (blog["全局评论设置"]["启用valine评论"] ||
+        blog["全局评论设置"]["启用disqus评论"] ||
+        blog["全局评论设置"]["启用waline评论"]) &&
         blog["友人帐页面允许评论"]
       ) {
         document.querySelector(
@@ -1191,6 +1206,17 @@
           s.setAttribute('data-timestamp', +new Date());
           (d.head || d.body).appendChild(s);
         })();
+      }
+
+      if (
+        blog["全局评论设置"]["启用waline评论"] &&
+        blog["友人帐页面允许评论"]
+      ) {
+        Waline.init({
+          el: "#vcomments",
+          serverURL: blog["全局评论设置"]["waline设置"]["serverurl"],
+          path: "internal=friendbook"
+        });
       }
     }
 
@@ -1348,9 +1374,9 @@
           // 评论
 
           if (
-            blog["全局评论设置"]["启用valine评论"] &&
-            blog["页面列表"][page_id]["启用评论"] ||
-            blog["全局评论设置"]["启用disqus评论"] &&
+            (blog["全局评论设置"]["启用valine评论"] ||
+            blog["全局评论设置"]["启用disqus评论"] ||
+            blog["全局评论设置"]["启用waline评论"]) &&
             blog["页面列表"][page_id]["启用评论"]
           ) {
             document.querySelector(
@@ -1391,6 +1417,19 @@
               s.setAttribute('data-timestamp', +new Date());
               (d.head || d.body).appendChild(s);
             })();
+          }
+
+          if (
+            blog["全局评论设置"]["启用waline评论"] &&
+            blog["页面列表"][page_id]["启用评论"]
+          ) {
+            Waline.init({
+              el: "#vcomments",
+              serverURL: blog["全局评论设置"]["waline设置"]["serverurl"],
+              path:
+                "page=" +
+                blog["页面列表"][page_id]["文件名"],
+            });
           }
         });
     }

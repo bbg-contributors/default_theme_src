@@ -1007,7 +1007,7 @@
             document.getElementById("viewContentAfterInputPasswordBtn").onclick = ()=>{
               try {
                 const decryptedContent = content_decrypt(JSON.stringify(response.data), document.getElementById("article_password_modal_value").value);
-                document.getElementById("passwordRequiredArea").innerHTML = decryptedContent;
+                document.getElementById("passwordRequiredArea").innerHTML = marked.parse(decryptedContent);
                 
               } catch (error) {
                 alert("密码错误。");

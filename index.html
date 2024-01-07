@@ -320,105 +320,104 @@
     #back_to_top_btn * i {
       width: 0.7em;
     }
+  </style>
+  <style id="dark_mode">
+    body {
+      background-color: #000000c7;
 
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #000000c7;
+    }
 
-      }
+    .blog_title_jumbotron, .bg-light {
+      background-color: #363232!important;
+    }
 
-      .blog_title_jumbotron, .bg-light {
-        background-color: #363232!important;
-      }
+    .copyright_hint {
+      color: white;
+    }
 
-      .copyright_hint {
-        color: white;
-      }
+    #blog_index_title,
+    #blog_index_subtitle,
+    .article-content h2,
+    .page-content h2,
+    #article-content-html p,
+    #page-content-html p {
+      color: white;
+    }
 
-      #blog_index_title,
-      #blog_index_subtitle,
-      .article-content h2,
-      .page-content h2,
-      #article-content-html p,
-      #page-content-html p {
-        color: white;
-      }
+    .article-item,
+    .article-content,
+    .page-content {
+      background-color: #000000a8
+    }
 
-      .article-item,
-      .article-content,
-      .page-content {
-        background-color: #000000a8
-      }
+    .article-item p,
+    .article-item-sub,
+    .article-content-sub,
+    #page_order_html,
+    #bottom_info_html {
+      color: lightgrey !important;
+    }
 
-      .article-item p,
-      .article-item-sub,
-      .article-content-sub,
-      #page_order_html,
-      #bottom_info_html {
-        color: lightgrey !important;
-      }
+    .card,
+    #tag-content {
+      background-color: black;
+      color: white
+    }
 
-      .card,
-      #tag-content {
-        background-color: black;
-        color: white
-      }
+    ul,
+    ol,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    th,
+    td,
+    .vcontent *,
+    #veditor {
+      color: white
+    }
 
-      ul,
-      ol,
-      li,
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      th,
-      td,
-      .vcontent *,
-      #veditor {
-        color: white
-      }
+    .vcontent p,
+    .vnick,
+    .vlink,
+    .vmail,
+    .vinput,
+    .vsubmit {
+      color: white !important
+    }
 
-      .vcontent p,
-      .vnick,
-      .vlink,
-      .vmail,
-      .vinput,
-      .vsubmit {
-        color: white !important
-      }
+    .vcontent * {
+      background-color: black !important;
+    }
 
-      .vcontent * {
-        background-color: black !important;
-      }
+    .expand::after {
+      background: black !important;
+      color: white !important;
+    }
 
-      .expand::after {
-        background: black !important;
-        color: white !important;
-      }
+    .expand::before {
+      background: rgba(0, 0, 0, 0.5) !important
+    }
 
-      .expand::before {
-        background: rgba(0, 0, 0, 0.5) !important
-      }
+    pre,
+    code,
+    kbd,
+    samp {
+      border-radius: 4px;
+      background-color: black !important;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      padding-left: 12px;
+      padding-right: 12px;
+      display: inline-block;
+    }
 
-      pre,
-      code,
-      kbd,
-      samp {
-        border-radius: 4px;
-        background-color: black !important;
-        padding-top: 4px;
-        padding-bottom: 4px;
-        padding-left: 12px;
-        padding-right: 12px;
-        display: inline-block;
-      }
-
-      .bbg-comment-area {
-        background-color: black;
-        color: white
-      }
+    .bbg-comment-area {
+      background-color: black;
+      color: white
     }
   </style>
   <style id="highlight_css">
@@ -1605,11 +1604,24 @@
         })
     }
 
+    function switch_night_mode() {
+      // https://developer.mozilla.org/zh-CN/docs/Web/API/StyleSheet/disabled
+      document.getElementById("dark_mode").disabled = !document.getElementById("dark_mode").disabled;
+    }
+
     axios
       .get("./data/index.json?timestamp=" + Date.parse(new Date()))
       .then(function (response) {
         blog = response.data;
         lang_name = blog["网站语言"];
+
+        if (blog["配色方案"] == "auto") {
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+            switch_night_mode();
+          });
+        } else if (blog["配色方案"] == "light") {
+          switch_night_mode();
+        }
 
         switch (blog["全站内容授权协议"]) {
           case "reserved":

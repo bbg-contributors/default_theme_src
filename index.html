@@ -170,7 +170,7 @@
     }
 
     .title_that_should_not_have_underline {
-      text-decoration: none!important;
+      text-decoration: none !important;
     }
 
     @media (max-width: 1050px) {
@@ -327,8 +327,9 @@
 
     }
 
-    .blog_title_jumbotron, .bg-light {
-      background-color: #363232!important;
+    .blog_title_jumbotron,
+    .bg-light {
+      background-color: #363232 !important;
     }
 
     .copyright_hint {
@@ -996,18 +997,17 @@
         )
         .then(function (response) {
           document.getElementById("loading_article_or_page_content").remove();
-          if(blog["文章列表"][article_id]["是否加密"]){
+          if (blog["文章列表"][article_id]["是否加密"]) {
             document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html"><div id="passwordRequiredArea">此文章被密码加密。请输入密码以查看文章内容。<div class="mb-3">
     <label class="form-label"><i class="fa fa-password"></i> 请输入密码</label>
     <input class="form-control" placeholder="请输入密码" value="" id="article_password_modal_value">
     <button class="btn btn-outline-primary" id="viewContentAfterInputPasswordBtn">查看内容</button>
   </div></div></div>`);
 
-            document.getElementById("viewContentAfterInputPasswordBtn").onclick = ()=>{
+            document.getElementById("viewContentAfterInputPasswordBtn").onclick = () => {
               try {
                 const decryptedContent = content_decrypt(JSON.stringify(response.data), document.getElementById("article_password_modal_value").value);
                 document.getElementById("passwordRequiredArea").innerHTML = marked.parse(decryptedContent);
-                
               } catch (error) {
                 alert("密码错误。");
               }
@@ -1080,8 +1080,8 @@
 
           if (
             (blog["全局评论设置"]["启用valine评论"] ||
-            blog["全局评论设置"]["启用disqus评论"] ||
-            blog["全局评论设置"]["启用waline评论"]) &&
+              blog["全局评论设置"]["启用disqus评论"] ||
+              blog["全局评论设置"]["启用waline评论"]) &&
             blog["文章列表"][article_id]["启用评论"]
           ) {
             document.querySelector(
@@ -1168,8 +1168,8 @@
 
       if (
         (blog["全局评论设置"]["启用valine评论"] ||
-        blog["全局评论设置"]["启用disqus评论"] ||
-        blog["全局评论设置"]["启用waline评论"]) &&
+          blog["全局评论设置"]["启用disqus评论"] ||
+          blog["全局评论设置"]["启用waline评论"]) &&
         blog["友人帐页面允许评论"]
       ) {
         document.querySelector(
@@ -1374,8 +1374,8 @@
 
           if (
             (blog["全局评论设置"]["启用valine评论"] ||
-            blog["全局评论设置"]["启用disqus评论"] ||
-            blog["全局评论设置"]["启用waline评论"]) &&
+              blog["全局评论设置"]["启用disqus评论"] ||
+              blog["全局评论设置"]["启用waline评论"]) &&
             blog["页面列表"][page_id]["启用评论"]
           ) {
             document.querySelector(
@@ -1769,17 +1769,17 @@
           r = parseInt(r);
           g = parseInt(g);
           b = parseInt(b);
-          if (r + 30<255){
+          if (r + 30 < 255) {
             r += 30;
           } else {
             r = 255;
           }
-          if(b+30<255){
+          if (b + 30 < 255) {
             b += 30;
           } else {
             b = 255;
           }
-          if(g+30<255){
+          if (g + 30 < 255) {
             g += 30;
           } else {
             g = 255;
@@ -1787,11 +1787,11 @@
           return `rgb(${r}, ${g}, ${b})`;
         }
 
-        function processed_color_for_nav_item_hover_css(color){
-          if(color.includes("rgb") === true && color.includes("rgba") === false){
+        function processed_color_for_nav_item_hover_css(color) {
+          if (color.includes("rgb") === true && color.includes("rgba") === false) {
             // is rgb color
             return rgbAdjustmentInNavItemCss(color);
-          } else if(color.includes("#") === true){
+          } else if (color.includes("#") === true) {
             // is hex color
             return rgbAdjustmentInNavItemCss(hexToRgbInNavItemCss(color));
           } else {

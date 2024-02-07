@@ -1824,6 +1824,60 @@
 
         document.getElementById("blogcss").insertAdjacentHTML("beforeend", `a{color:${blog["全局主题设置"]["链接颜色"]}}a:hover{color:${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["链接颜色"])}}a:active{${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["链接颜色"])}}.underline-animation {position: relative;text-decoration: none;}.underline-animation::before {content: "";position: absolute;display: block;width: 100%;height: 2px;bottom: 0;left: 0;background-color: ${blog["全局主题设置"]["链接颜色"]};transform: scaleX(0);transition: transform 0.3s ease;}.underline-animation:hover::before{transform: scaleX(1);}`);
 
+        function live2d_res_load(url, type) {
+          return new Promise((resolve, reject) => {
+            let tag;
+
+            switch(type){
+              case "js":
+                tag = document.createElement("script");
+                tag.src = url;
+                tag.type = "text/javascript";
+                break;
+              case "css":
+                tag = document.createElement("link");
+                tag.rel = "stylesheet";
+                tag.href = url;
+                break;
+            }
+
+            if (tag) {
+              tag.onload = () => resolve(url);
+              tag.onerror = () => reject(url);
+              document.head.appendChild(tag);
+            }
+          });
+        }
+
+        const live2d_enabled = blog["全局主题设置"]["是否启用live2d-widget"];
+
+        if (live2d_enabled === true) {
+          const live2d_path = blog["全局主题设置"]["live2d-widget设置"]["widget路径"];
+          const live2d_tips_path = blog["全局主题设置"]["live2d-widget设置"]["tips路径"];
+          const live2d_api_path = blog["全局主题设置"]["live2d-widget设置"]["api路径"];
+          let live2d_tools = [];
+          for(let live2d_tool of Object.keys(blog["全局主题设置"]["live2d-widget设置"]["功能设置"])){
+            if(blog["全局主题设置"]["live2d-widget设置"]["功能设置"][live2d_tool] === true){
+              live2d_tools.push(live2d_tool);
+            }
+          }
+          if(screen.width >= 768){
+            Promise.all([
+              live2d_res_load(`${live2d_path}waifu.css`, "css"),
+              live2d_res_load(`${live2d_path}live2d.min.js`, "js"),
+              live2d_res_load(`${live2d_path}waifu-tips.js`, "js")
+            ]).then(()=>{
+              initWidget({
+                waifuPath: live2d_tips_path,
+                cdnPath: live2d_api_path,
+                tools: live2d_tools
+              });
+            });
+          }
+
+        }
+
+
         // 自定义css载入
 
         if (blog["启用自定义CSS"] === true) {

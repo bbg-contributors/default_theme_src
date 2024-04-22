@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/katex@0.16.3/dist/katex.min.css">
   <link rel='stylesheet' href="https://unpkg.com/@waline/client@2.15.8/dist/waline.css">
-  <link href="https://google-fonts.mirrors.sjtug.sjtu.edu.cn/css?family=Noto+Sans+SC" rel="stylesheet">
 </head>
 
 <body>
@@ -29,10 +28,6 @@
     }
   </style>
   <style id="blogcss">
-    * {
-      font-family: 'Noto Sans SC', sans-serif, 'KaTeX_Main', 'Times New Roman', serif;
-    }
-
     .article-item,
     .article-content,
     .bbg-comment-area,
@@ -468,7 +463,7 @@
   </div>
 
 
-  <script src="https://unpkg.com/marked/marked.min.js"></script>
+  <script src="https://unpkg.com/marked@7.0.5/marked.min.js"></script>
   <script src="https://unpkg.com/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
   <script src="https://unpkg.com/valine@1.5.1/dist/Valine.min.js"></script>
@@ -478,13 +473,6 @@
   <script src="https://unpkg.com/katex@0.16.3/dist/katex.min.js"></script>
   <script src="https://unpkg.com/katex@0.16.3/dist/contrib/auto-render.min.js"></script>
   <script>
-
-    marked.setOptions({
-      highlight: function (code) {
-        return hljs.highlightAuto(code).value;
-      }
-    });
-
     const image_viewer_dialog = new bootstrap.Modal(document.getElementById('image_viewer_dialog'));
 
     markdown_renderer = new marked.Renderer();
@@ -497,8 +485,13 @@
       return `<a href="${href}" ${title === null || title === undefined || title === "" ? "" : `title="${title}"`} style="text-decoration: underline">${text} <i class="fa fa-external-link"></i></a>`
     }
 
+    var highlightFunc = function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+
     marked.setOptions({
-      renderer: markdown_renderer
+      renderer: markdown_renderer,
+      highlight: highlightFunc
     })
 
     baseurl = "";
@@ -890,6 +883,19 @@
       enter_indexPage();
     }
 
+    function convertTimeStampToLocalTime(timestamp) {
+      if(blog["网站语言"] === "简体中文"){
+        let dateObj = new Date(timestamp);
+        return dateObj.getFullYear() + "年" + (dateObj.getMonth() + 1) + "月" + dateObj.getDate() + "日 " + ((dateObj.getHours() <= 12) ? "上午" : "下午") + ((dateObj.getHours() <= 12) ? dateObj.getHours() : (dateObj.getHours() - 12))  + ":" + ((dateObj.getMinutes().toString().length === 1) ? "0" : "") + dateObj.getMinutes();
+      }else if(blog["网站语言"] === "English"){
+        return new Date(timestamp).toLocaleString("en-US", {hour12: true});
+      }else if(blog["网站语言"] === "日本語"){
+        return new Date(timestamp).toLocaleString("ja-JP", {hour12: true});
+      }else{
+        return new Date(timestamp).toISOString();
+      }
+    }
+
     function render_article_list() {
       for (let i = 0; i < blog["文章列表"].length; i++) {
         if (blog["文章列表"][i]["是否置顶"] && currentArticleListPageOrder === 1) {
@@ -914,7 +920,7 @@
 
           document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
 
-          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][i]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div>`);
+          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][i]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div>`);
 
 
           if (blog["文章列表"][i]["标签"].length === 0) {
@@ -967,7 +973,7 @@
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1><div id="article-content-sub" class="article-content-sub"><i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["创建日期"]}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${blog["文章列表"][article_id]["修改日期"]}</span> <br /><div class="small_empty_between_lines"></div></div></div><br /></div>`);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1><div id="article-content-sub" class="article-content-sub"><i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div></div></div><br /></div>`);
 
       // start
 
@@ -1278,7 +1284,7 @@
             if (tagtree[Object.keys(tagtree)[i]][k] === blog["文章列表"][j] && blog["文章列表"][j]["是否隐藏"] === false) {
               document.querySelector(
                 "#tag-content"
-              ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[Object.keys(tagtree)[i]][k]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${tagtree[Object.keys(tagtree)[i]][k]["修改日期"]}）</p>`);
+              ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[Object.keys(tagtree)[i]][k]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${convertTimeStampToLocalTime(tagtree[Object.keys(tagtree)[i]][k]["创建时间（时间戳）"])}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${convertTimeStampToLocalTime(tagtree[Object.keys(tagtree)[i]][k]["修改时间（时间戳）"])}）</p>`);
 
 
               currentTagTreeArticleNumber++;
@@ -1298,7 +1304,7 @@
 
         for (let i = 0; i < blog["文章列表"].length; i++) {
           if (blog["文章列表"][i]["是否隐藏"] === false) {
-            document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
+            document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
 
           }
         }
@@ -1309,7 +1315,7 @@
           for (let i = 0; i < blog["文章列表"].length; i++) {
             if (blog["文章列表"][i]["是否隐藏"] === false) {
               if (blog["文章列表"][i]["标签"].length === 0 || blog["文章列表"][i]["标签"] === false || blog["文章列表"][i]["标签"] === "" || blog["文章列表"][i]["标签"] === undefined || blog["文章列表"][i]["标签"] === null) {
-                document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${blog["文章列表"][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
+                document.querySelector("#tag-content").insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}">${blog["文章列表"][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${blog["文章列表"][i]["修改日期"]}）</p>`);
               }
 
             }
@@ -1332,7 +1338,7 @@
           if (tagtree[tagname][i] === blog["文章列表"][j] && blog["文章列表"][j]["是否隐藏"] === false) {
             document.querySelector(
               "#tag-content"
-            ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="/index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[tagname][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${tagtree[tagname][i]["创建日期"]}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${tagtree[tagname][i]["修改日期"]}）</p>`);
+            ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="/index.html?type=article&filename=${blog["文章列表"][j]["文件名"]}" onclick="enter_article(${j});return false;">${tagtree[tagname][i]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${convertTimeStampToLocalTime(tagtree[tagname][i]["创建时间（时间戳）"])}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${convertTimeStampToLocalTime(tagtree[tagname][i]["修改时间（时间戳）"])}）</p>`);
 
           }
         }
@@ -1669,7 +1675,8 @@
           }
 
           marked.setOptions({
-            renderer: markdown_renderer
+            renderer: markdown_renderer,
+            highlight: highlightFunc
           });
         } else if (blog["Markdown渲染配置"]["根据用户屏幕尺寸渲染图片尺寸"] === true && blog["Markdown渲染配置"]["在用户点击图片时显示图片查看器"] === false) {
 
@@ -1679,7 +1686,8 @@
           }
 
           marked.setOptions({
-            renderer: markdown_renderer
+            renderer: markdown_renderer,
+            highlight: highlightFunc
           });
         } else if (blog["Markdown渲染配置"]["根据用户屏幕尺寸渲染图片尺寸"] === false && blog["Markdown渲染配置"]["在用户点击图片时显示图片查看器"] === true) {
           markdown_renderer.image = function (src, title, alt) {
@@ -1688,7 +1696,8 @@
           }
 
           marked.setOptions({
-            renderer: markdown_renderer
+            renderer: markdown_renderer,
+            highlight: highlightFunc
           });
         } else if (blog["Markdown渲染配置"]["使用markdown文件所在目录作为baseurl"]) {
           markdown_renderer.image = function (src, title, alt) {
@@ -1697,7 +1706,8 @@
           }
 
           marked.setOptions({
-            renderer: markdown_renderer
+            renderer: markdown_renderer,
+            highlight: highlightFunc
           });
         }
 

@@ -313,7 +313,18 @@
     }
 
     #back_to_top_btn * i {
-      width: 0.7em;
+      width: 0.8em;
+    }
+
+    #setting_theme_btn {
+      position: fixed;
+      z-index: 99;
+      right: 20px;
+      bottom: 80px;
+    }
+
+    #setting_theme_btn * i {
+      width: 0.8em;
     }
   </style>
   <style id="dark_mode">
@@ -415,6 +426,11 @@
       background-color: black;
       color: white
     }
+    
+    .modal-header, .modal-body {
+      background-color: rgb(139, 132, 132)!important;
+      color: white;
+    }
   </style>
   <style id="highlight_css">
 
@@ -432,6 +448,9 @@
 
   <div id="top"></div>
   <div id="root" style="display:none;"></div>
+  <div id="setting_theme_btn">
+    <a href="javascript:toggle_theme_setting();" class="btn btn-secondary"><i class="fa fa-cog"></i></a>
+  </div>
   <div id="back_to_top_btn">
     <a href="javascript:scrollTo(0,0);" class="btn btn-secondary"><i class="fa fa-angle-up"></i></a>
   </div>
@@ -462,6 +481,31 @@
     </div>
   </div>
 
+  <div class="modal fade" tabindex="-1" id="theme_setting_dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="theme_setting_dialog_title"><i class="fa fa-cog"></i> 主题设置</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="theme_setting_dialog_body">
+          <h4><i class="fa fa-moon-o"></i> 暗色模式设置</h4>
+          <select class="form-select" onchange="hook_after_dark_mode_setting_has_been_modified()" id="selection_dark_mode_setting">
+            <option value="auto_switch">跟随系统</option>
+            <option value="light_mode">亮色模式</option>
+            <option value="dark_mode">暗色模式</option>
+          </select>
+          <br />
+          <h4><i class="fa fa-font"></i> 字体</h4>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="use_serif_font" onchange="hook_after_use_serif_font_setting_has_been_modified();">
+            <label class="form-check-label" for="use_serif_font">使用衬线字体</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script src="https://unpkg.com/marked@7.0.5/marked.min.js"></script>
   <script src="https://unpkg.com/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -474,6 +518,59 @@
   <script src="https://unpkg.com/katex@0.16.3/dist/contrib/auto-render.min.js"></script>
   <script>
     const image_viewer_dialog = new bootstrap.Modal(document.getElementById('image_viewer_dialog'));
+    const theme_setting_dialog = new bootstrap.Modal(document.getElementById('theme_setting_dialog'));
+
+    function toggle_theme_setting() {
+      theme_setting_dialog.toggle();
+    }
+
+    function hook_after_dark_mode_setting_has_been_modified(){
+      const dark_mode_setting = document.querySelector("#selection_dark_mode_setting").value;
+      localStorage.setItem("dark_mode_setting", dark_mode_setting);
+      reload_dark_mode_setting();
+    }
+
+    function hook_after_use_serif_font_setting_has_been_modified(){
+      const use_serif_font = document.querySelector("#use_serif_font").checked;
+      localStorage.setItem("use_serif_font", use_serif_font?"true":"false");
+      reload_serif_font_setting();
+    }
+
+    if(localStorage.getItem("dark_mode_setting") === null){
+      localStorage.setItem("dark_mode_setting", "auto_switch");
+    }
+
+    if(localStorage.getItem("use_serif_font") === null){
+      localStorage.setItem("use_serif_font", "false");
+    }
+
+    document.getElementById("selection_dark_mode_setting").value = localStorage.getItem("dark_mode_setting");
+    document.getElementById("use_serif_font").checked = localStorage.getItem("use_serif_font") === "true";
+
+    function reload_dark_mode_setting(){
+      switch (localStorage.getItem("dark_mode_setting")) {
+          case "light_mode":
+            switch_night_mode("light");
+            break;
+          case "dark_mode":
+            switch_night_mode("dark");
+            break;
+          default:
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              switch_night_mode("dark");
+            } else {
+              switch_night_mode("light");
+            }
+        }
+    }
+
+    function reload_serif_font_setting(){
+      if(localStorage.getItem("use_serif_font") === "true"){
+        document.body.style.fontFamily = "serif";
+      }else{
+        document.body.style.fontFamily = "sans-serif";
+      }
+    }
 
     markdown_renderer = new marked.Renderer();
 
@@ -920,7 +1017,7 @@
 
           document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
 
-          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][i]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div>`);
+          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][i]["创建时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][i]["修改时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][i]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div>`);
 
 
           if (blog["文章列表"][i]["标签"].length === 0) {
@@ -942,9 +1039,9 @@
 
         for (let i = 0; i < articleListPageLength; i++) {
           if (i + 1 === currentArticleListPageOrder) {
-            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-primary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>`);
+            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-secondary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button> `);
           } else {
-            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-secondary btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>`);
+            document.getElementById("container").insertAdjacentHTML("beforeend", `<button class="btn btn-link btn-sm" onclick="changeArticleListPageOrderTo(${i + 1})">${i + 1}</button>`);
           }
         }
 
@@ -973,7 +1070,7 @@
 
       document.querySelector(
         "#root"
-      ).insertAdjacentHTML("afterbegin", `<div class="bg-light"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1><div id="article-content-sub" class="article-content-sub"><i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div></div></div><br /></div>`);
+      ).insertAdjacentHTML("afterbegin", `<div class="bg-light" style="opacity: 0.9"><br /><br /><br /><br /><div class="container blog_title_jumbotron"><h1 id="current_article_title" style="font-size:50px;">${blog["文章列表"][article_id]["文章标题"]}</h1><div id="article-content-sub" class="article-content-sub"><i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][article_id]["创建时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][article_id]["修改时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][article_id]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div></div></div><br /></div>`);
 
       // start
 
@@ -1020,6 +1117,13 @@
             }
 
           } else {
+            if(blog["文章列表"][article_id]["ai生成的摘要"] !== null && blog["文章列表"][article_id]["ai生成的摘要"] !== undefined && blog["文章列表"][article_id]["ai生成的摘要"] !== ""){
+              document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div class="alert alert-primary" style="padding-left:40px;padding-right:40px;padding-top:15px;padding-bottom:5px; border-radius: 30px; margin-bottom:30px!important" role="alert">
+  <h4 class="alert-heading"><i class="fa fa-newspaper-o" style="margin-right:4px"></i> AI 生成的摘要 <span style="display:inline-block; margin-right: 4px"></span> <button class="btn btn-sm btn-outline-secondary" style="font-size: 12px" disabled>此摘要并非实时生成</button></h4>
+  <div style="margin-top:17px"></div>
+  <p>${blog["文章列表"][article_id]["ai生成的摘要"]}</p>
+</div>`);
+            }
             document.querySelector("#article-content").insertAdjacentHTML("beforeend", `<div id="article-content-html">${marked.parse(response.data)}</div>`);
           }
 
@@ -1043,11 +1147,11 @@
 
 
           if (blog["提供文章文件下载"]) {
-            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-primary" href="./data/articles/${blog["文章列表"][article_id]["文件名"]}" download="${blog["文章列表"][article_id]["文章标题"]}.md"><i class="fa fa-download"></i> 将该文章下载到你的计算机上</a>`);
+            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-outline-primary" href="./data/articles/${blog["文章列表"][article_id]["文件名"]}" download="${blog["文章列表"][article_id]["文章标题"]}.md"><i class="fa fa-download"></i> 将该文章下载到你的计算机上</a> `);
           }
 
           if (blog["提供复制全文到剪贴板的选项"]) {
-            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-primary" id="copy_to_clipboard_button" onclick="copy_full_article_to_clipboard();"><i class="fa fa-clipboard"></i> 复制全文到剪贴板</a>`);
+            document.getElementById("article-bottom-bar").insertAdjacentHTML("beforeend", `<a class="btn btn-outline-primary" id="copy_to_clipboard_button" onclick="copy_full_article_to_clipboard();"><i class="fa fa-clipboard"></i> 复制全文到剪贴板</a>`);
           }
 
           if (blog["不使用全站内容授权协议"] === false) {
@@ -1252,6 +1356,20 @@
       return Object.keys(getTagTree()).length;
     }
 
+    function archive_and_tags_switch_to_archive() {
+      document.querySelector("#tag-content").setAttribute("style", "display:none");
+      document.querySelector("#archive-content").setAttribute("style", "display:block");
+      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link");
+      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link active");
+    }
+
+    function archive_and_tags_switch_to_tags() {
+      document.querySelector("#tag-content").setAttribute("style", "display:block");
+      document.querySelector("#archive-content").setAttribute("style", "display:none");
+      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link active");
+      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link");
+    }
+
     function render_tag_tree() {
       //todo：考虑没有任何标签的情况
 
@@ -1259,7 +1377,37 @@
 
       let tagtree = getTagTree();
 
-      document.getElementById("container").insertAdjacentHTML("beforeend", `<div class="tag-content" id="tag-content"></div>`);
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<br /><br /><ul class="nav nav-tabs">
+  <li class="nav-item" style="background-color: white!important;">
+    <a class="nav-link active" href="javascript:archive_and_tags_switch_to_tags()" id="archive_and_tags_nav_by_tags">按标签检索</a>
+  </li>
+  <li class="nav-item" style="background-color: white!important;">
+    <a class="nav-link" href="javascript:archive_and_tags_switch_to_archive()" id="archive_and_tags_nav_by_time">按年份检索</a>
+  </li>
+</ul><div class="tag-content" id="tag-content"></div><div class="tag-content" id="archive-content" style="display:none;"></div>`);
+
+      let archiveObj = new Object();
+
+      for (let i = 0; i < blog["文章列表"].length; i++) {
+        if (blog["文章列表"][i]["是否隐藏"] === false) {
+          let year = new Date(blog["文章列表"][i]["创建时间（时间戳）"]).getFullYear();
+          if (typeof archiveObj[year] === "undefined") {
+            archiveObj[year] = new Array();
+          }
+          archiveObj[year].push(i);
+        }
+      }
+
+      for (let i = 0; i < Object.keys(archiveObj).length; i++) {
+        document.querySelector(
+          "#archive-content"
+        ).insertAdjacentHTML("beforeend", `<h2 id="archive-content-of-year-${Object.keys(archiveObj)[i]}"><i class="fa fa-calendar"></i> <span>${Object.keys(archiveObj)[i]}</span></h2>`);
+        for (let k = 0; k < archiveObj[Object.keys(archiveObj)[i]].length; k++) {
+          document.querySelector(
+            "#archive-content"
+          ).insertAdjacentHTML("beforeend", `<p><i class="fa fa-file-text-o"></i> <a href="./index.html?type=article&filename=${blog["文章列表"][archiveObj[Object.keys(archiveObj)[i]][k]]["文件名"]}" onclick="enter_article(${archiveObj[Object.keys(archiveObj)[i]][k]});return false;">${blog["文章列表"][archiveObj[Object.keys(archiveObj)[i]][k]]["文章标题"]}</a>（<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]}${convertTimeStampToLocalTime(blog["文章列表"][archiveObj[Object.keys(archiveObj)[i]][k]]["创建时间（时间戳）"])}，<i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]}${convertTimeStampToLocalTime(blog["文章列表"][archiveObj[Object.keys(archiveObj)[i]][k]]["修改时间（时间戳）"])}）</p>`);
+        }
+      }
 
       document.querySelector(
         "#root"
@@ -1632,20 +1780,7 @@
         blog = response.data;
         lang_name = blog["网站语言"];
 
-        switch (blog["配色方案"]) {
-          case "light":
-            switch_night_mode("light");
-            break;
-          case "dark":
-            switch_night_mode("dark");
-            break;
-          default:
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              switch_night_mode("dark");
-            } else {
-              switch_night_mode("light");
-            }
-        }
+        reload_dark_mode_setting();
 
         switch (blog["全站内容授权协议"]) {
           case "reserved":

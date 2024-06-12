@@ -233,6 +233,10 @@
       font-weight: bolder;
     }
 
+    .archive-nav-item {
+       background-color: white !important;
+    }
+
 
     @keyframes fade-in-right {
       from {
@@ -366,7 +370,7 @@
     }
 
     .card,
-    #tag-content {
+    .tag-content {
       background-color: black;
       color: white
     }
@@ -430,6 +434,19 @@
     .modal-header, .modal-body {
       background-color: rgb(139, 132, 132)!important;
       color: white;
+    }
+
+    .archive-nav {
+       border-bottom: 1px solid var(--bs-dark);
+    }
+
+    .archive-nav-item {
+       background-color: black !important;
+    }
+
+    .archive-nav-link {
+       background-color: unset !important;
+       border-color: var(--bs-dark) var(--bs-dark) #000 !important;
     }
   </style>
   <style id="highlight_css">
@@ -902,7 +919,7 @@
 
       </ul>
       <div class="d-flex" role="search">
-	  <button class="btn btn-outline-${blog["搜索按钮边框颜色设置为暗色"] ? "dark" : "light"}" onclick="start_search_dialog()" style="color: ${blog["全局主题设置"]["标题栏文字颜色"]}"><i class="fa fa-search"></i> ${langdata["SEARCH_SOMETHING"][lang_name]}</button>
+         <button class="btn btn-outline-${blog["搜索按钮边框颜色设置为暗色"] ? "dark" : "light"}" onclick="start_search_dialog()" style="color: ${blog["全局主题设置"]["标题栏文字颜色"]}"><i class="fa fa-search"></i> ${langdata["SEARCH_SOMETHING"][lang_name]}</button>
       </div>
       <div class="d-flex">
          <div style="display:block;padding:2px"></div>
@@ -1367,15 +1384,15 @@
     function archive_and_tags_switch_to_archive() {
       document.querySelector("#tag-content").setAttribute("style", "display:none");
       document.querySelector("#archive-content").setAttribute("style", "display:block");
-      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link");
-      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link active");
+      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link archive-nav-link");
+      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link active archive-nav-link");
     }
 
     function archive_and_tags_switch_to_tags() {
       document.querySelector("#tag-content").setAttribute("style", "display:block");
       document.querySelector("#archive-content").setAttribute("style", "display:none");
-      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link active");
-      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link");
+      document.getElementById("archive_and_tags_nav_by_tags").setAttribute("class", "nav-link active archive-nav-link");
+      document.getElementById("archive_and_tags_nav_by_time").setAttribute("class", "nav-link archive-nav-link");
     }
 
     function render_tag_tree() {
@@ -1385,12 +1402,12 @@
 
       let tagtree = getTagTree();
 
-      document.getElementById("container").insertAdjacentHTML("beforeend", `<br /><br /><ul class="nav nav-tabs">
-  <li class="nav-item" style="background-color: white!important;">
-    <a class="nav-link active" href="javascript:archive_and_tags_switch_to_tags()" id="archive_and_tags_nav_by_tags">按标签检索</a>
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<br /><br /><ul class="nav nav-tabs archive-nav">
+  <li class="nav-item archive-nav-item">
+    <a class="nav-link active archive-nav-link" href="javascript:archive_and_tags_switch_to_tags()" id="archive_and_tags_nav_by_tags">按标签检索</a>
   </li>
-  <li class="nav-item" style="background-color: white!important;">
-    <a class="nav-link" href="javascript:archive_and_tags_switch_to_archive()" id="archive_and_tags_nav_by_time">按年份检索</a>
+  <li class="nav-item archive-nav-item">
+    <a class="nav-link archive-nav-link" href="javascript:archive_and_tags_switch_to_archive()" id="archive_and_tags_nav_by_time">按年份检索</a>
   </li>
 </ul><div class="tag-content" id="tag-content"></div><div class="tag-content" id="archive-content" style="display:none;"></div>`);
 
@@ -1971,7 +1988,7 @@
           }
         }
 
-        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `.nav-item {background-color:${blog["全局主题设置"]["标题栏背景颜色"]}!important}.nav-item:hover{background-color:${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["标题栏背景颜色"])}!important;transition: background-color 0.1s;}`);
+        document.getElementById("blogcss").insertAdjacentHTML("beforeend", `.nav-item {background-color:${blog["全局主题设置"]["标题栏背景颜色"]}}.nav-item:hover{background-color:${processed_color_for_nav_item_hover_css(blog["全局主题设置"]["标题栏背景颜色"])};transition: background-color 0.1s;}`);
 
         // load custom link color
 

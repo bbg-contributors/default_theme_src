@@ -109,7 +109,7 @@
       border-left: #ae2105 solid 2px;
     }
 
-    .article-content {
+    .article-content, .page-content {
       word-break: break-all;
     }
 
@@ -331,6 +331,9 @@
       width: 0.8em;
     }
   </style>
+  <style id="theme_css">
+
+  </style>
   <style id="dark_mode">
     body {
       background-color: #000000c7;
@@ -421,6 +424,10 @@
       background: rgba(0, 0, 0, 0.5) !important
     }
 
+    a {
+      color: rgb(148, 187, 255);
+    }
+
     pre,
     code,
     kbd,
@@ -432,6 +439,11 @@
       padding-left: 12px;
       padding-right: 12px;
       display: inline-block;
+      color: white!important
+    }
+
+    code * {
+      color: white!important
     }
 
     .bbg-comment-area {
@@ -1814,6 +1826,35 @@
         lang_name = blog["网站语言"];
 
         reload_dark_mode_setting();
+
+        if (typeof(blog["站点主题"])!=="undefined"){
+          if(blog["站点主题"] === "Solarized_Pink"){
+            blog["全局主题设置"]["标题栏背景颜色"] = "#6699cc";
+            blog["全局主题设置"]["链接颜色"] = "#993366";
+            document.querySelector("#theme_css").innerHTML = `
+              .bg-light {
+                background-color: #fffff2!important;
+                border-bottom: 1px solid #6699cc;
+                margin-bottom: 35px
+              }
+
+              body {
+                background-color:#fffff2;
+              }
+
+              .article-item, .article-content, .page-content, .articlebottomnav, .tag-content {
+                border: 1px solid #874342;
+                background: transparent;
+                box-shadow: none;
+              }
+
+              #blog_index_title, #current_article_title, .blog_title_jumbotron h1 {
+                color: #206c89;
+              }
+            `;
+          }
+        }
+
 
         switch (blog["全站内容授权协议"]) {
           case "reserved":

@@ -1057,7 +1057,7 @@
         ) {
         } else {
 
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a class="underline-animation" href="./index.html?type=article&filename=${visible_articles[i]["文件名"]}" onclick="enter_article(${i});return false;">${visible_articles[i]["文章标题"]}</a></h2></div>`);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a class="underline-animation" href="./index.html?type=article&filename=${visible_articles[i]["文件名"]}" onclick="enter_article(${i}, true);return false;">${visible_articles[i]["文章标题"]}</a></h2></div>`);
 
 
           document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
@@ -1101,7 +1101,7 @@
       }
     }
 
-    function render_article_content(article_id) {
+    function render_article_content(article_id, visible) {
 
       if (blog["Markdown渲染配置"]["使用markdown文件所在目录作为baseurl"]) {
         baseurl = "/data/articles/"
@@ -1230,8 +1230,7 @@
 
           }
 
-
-
+          if (visible) blog["文章列表"] = visible_articles; // This is needed, though idk why???
 
           if (
             (blog["全局评论设置"]["启用valine评论"] ||
@@ -1759,13 +1758,16 @@
       }, 1);
     }
 
-    function enter_article(article_id) {
+    function enter_article(article_id, visible = false) {
+      let article_list = blog["文章列表"];
+      if (visible) blog["文章列表"] = visible_articles;
       history.pushState({ type: "article", filename: blog["文章列表"][article_id]["文件名"] }, "", `./index.html?type=article&filename=${blog["文章列表"][article_id]["文件名"]}`);
       document.getElementsByTagName("title")[0].innerHTML = `${blog["文章列表"][article_id]["文章标题"]} - ${blog["博客标题"]} `;
       resetPage();
       render_nav(false);
       render_container();
-      render_article_content(article_id);
+      render_article_content(article_id, visible);
+      blog["文章列表"] = article_list;
 
       setTimeout(() => {
         scrollTo(0, 0);

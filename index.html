@@ -1050,32 +1050,32 @@
       let currentArticleListFromOrder = (currentArticleListPageOrder - 1) * blog["文章列表中每页的文章数为"] + 1;
       let currentArticleListToOrder = currentArticleListPageOrder * blog["文章列表中每页的文章数为"];
 
-      for (let i = currentArticleListFromOrder - 1; i < currentArticleListToOrder && i < visible_articles.length; i++) {
+      for (let i = currentArticleListFromOrder - 1; i < currentArticleListToOrder && i < blog["文章列表"].length; i++) {
         if (
-          visible_articles[i]["是否隐藏"] ||
-          visible_articles[i]["是否置顶"]
+          blog["文章列表"][i]["是否隐藏"] ||
+          blog["文章列表"][i]["是否置顶"]
         ) {
         } else {
 
-          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a class="underline-animation" href="./index.html?type=article&filename=${visible_articles[i]["文件名"]}" onclick="enter_article(${i}, true);return false;">${visible_articles[i]["文章标题"]}</a></h2></div>`);
+          document.querySelector("#container").insertAdjacentHTML("beforeend", `<div class="article-item" id="article-item-${i}"><h2><a class="underline-animation" href="./index.html?type=article&filename=${blog["文章列表"][i]["文件名"]}" onclick="enter_article(${i});return false;">${blog["文章列表"][i]["文章标题"]}</a></h2></div>`);
 
 
           document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<div class="article-item-sub" id="article-item-sub-${i}"></div>`);
 
-          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(visible_articles[i]["创建时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(visible_articles[i]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(visible_articles[i]["修改时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(visible_articles[i]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div>`);
+          document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-calendar"></i> ${langdata["ARTICLE_CREATEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][i]["创建时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][i]["创建时间（时间戳）"])}</span> <div class="small_empty_inline"></div> | <div class="small_empty_inline"></div> <i class="fa fa-clock-o"></i> ${langdata["LASTMODIFIEDAT"][lang_name]} <span class="article-item-sub-dotted" title="${new Date(blog["文章列表"][i]["修改时间（时间戳）"]).toISOString()}">${convertTimeStampToLocalTime(blog["文章列表"][i]["修改时间（时间戳）"])}</span> <br /><div class="small_empty_between_lines"></div>`);
 
 
-          if (visible_articles[i]["标签"].length === 0) {
+          if (blog["文章列表"][i]["标签"].length === 0) {
           } else {
             document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<i class="fa fa-tags"></i> ${langdata["TAGS"][lang_name]}`);
 
-            for (let k = 0; k < visible_articles[i]["标签"].length; k++) {
-              document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<a class="article-tag-underlined" style="color: ${getTagColor(visible_articles[i]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${visible_articles[i]["标签"][k]}" onclick="enter_tag('${visible_articles[i]["标签"][k]}');return false;">#${visible_articles[i]["标签"][k]}</a>`);
+            for (let k = 0; k < blog["文章列表"][i]["标签"].length; k++) {
+              document.querySelector("#article-item-sub-" + i).insertAdjacentHTML("beforeend", `<a class="article-tag-underlined" style="color: ${getTagColor(blog["文章列表"][i]["标签"][k])}" href="./index.html?type=internal&function=tag&argument=${blog["文章列表"][i]["标签"][k]}" onclick="enter_tag('${blog["文章列表"][i]["标签"][k]}');return false;">#${blog["文章列表"][i]["标签"][k]}</a>`);
             }
           }
 
 
-          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<br /><p>${visible_articles[i]["摘要"]}</p>`);
+          document.querySelector("#article-item-" + i).insertAdjacentHTML("beforeend", `<br /><p>${blog["文章列表"][i]["摘要"]}</p>`);
 
         }
       }
@@ -1101,7 +1101,7 @@
       }
     }
 
-    function render_article_content(article_id, visible) {
+    function render_article_content(article_id) {
 
       if (blog["Markdown渲染配置"]["使用markdown文件所在目录作为baseurl"]) {
         baseurl = "/data/articles/"
@@ -1230,7 +1230,8 @@
 
           }
 
-          if (visible) blog["文章列表"] = visible_articles; // This is needed, though idk why???
+
+
 
           if (
             (blog["全局评论设置"]["启用valine评论"] ||
@@ -1376,19 +1377,17 @@
     function getTagTree() {
       let tagtree = new Object();
 
-      //todo:考虑隐藏文章不应该纳入到标签树中
-
-      for (let i = 0; i < blog["文章列表"].length; i++) {
-        if (blog["文章列表"][i]["标签"].length === 0) {
+      for (let i = 0; i < visible_articles.length; i++) {
+        if (visible_articles[i]["标签"].length === 0) {
         } else {
-          for (let k = 0; k < blog["文章列表"][i]["标签"].length; k++) {
+          for (let k = 0; k < visible_articles[i]["标签"].length; k++) {
             if (
-              typeof tagtree[blog["文章列表"][i]["标签"][k]] === "undefined"
+              typeof tagtree[visible_articles[i]["标签"][k]] === "undefined"
             ) {
-              tagtree[blog["文章列表"][i]["标签"][k]] = new Array();
+              tagtree[visible_articles[i]["标签"][k]] = new Array();
             } else {
             }
-            tagtree[blog["文章列表"][i]["标签"][k]].push(blog["文章列表"][i]);
+            tagtree[visible_articles[i]["标签"][k]].push(visible_articles[i]);
           }
         }
       }
@@ -1758,16 +1757,13 @@
       }, 1);
     }
 
-    function enter_article(article_id, visible = false) {
-      let article_list = blog["文章列表"];
-      if (visible) blog["文章列表"] = visible_articles;
+    function enter_article(article_id) {
       history.pushState({ type: "article", filename: blog["文章列表"][article_id]["文件名"] }, "", `./index.html?type=article&filename=${blog["文章列表"][article_id]["文件名"]}`);
       document.getElementsByTagName("title")[0].innerHTML = `${blog["文章列表"][article_id]["文章标题"]} - ${blog["博客标题"]} `;
       resetPage();
       render_nav(false);
       render_container();
-      render_article_content(article_id, visible);
-      blog["文章列表"] = article_list;
+      render_article_content(article_id);
 
       setTimeout(() => {
         scrollTo(0, 0);

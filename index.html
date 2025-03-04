@@ -2279,7 +2279,7 @@
 
 
         if (getUrlArgs("type") === "article") {
-          let article_filename = getUrlArgs("filename");
+          let article_filename = decodeURIComponent(getUrlArgs("filename"));
           for (let i = 0; i < blog["文章列表"].length; i++) {
             if (blog["文章列表"][i]["文件名"] === article_filename) {
               success_locate_article_id = true;
@@ -2309,7 +2309,7 @@
         }
 
         if (getUrlArgs("type") === "page") {
-          let page_filename = getUrlArgs("filename");
+          let page_filename = decodeURIComponent(getUrlArgs("filename"));
           for (let i = 0; i < blog["页面列表"].length; i++) {
             if (blog["页面列表"][i]["文件名"] === page_filename) {
               success_locate_page_id = true;

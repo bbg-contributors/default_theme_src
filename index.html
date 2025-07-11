@@ -1868,7 +1868,7 @@
     }
 
     function render_bottom_information() {
-      document.getElementById("container").insertAdjacentHTML("beforeend", `<hr /><div style="color:grey" id="bottom_info_html">${marked.parse(blog["底部信息（格式为markdown）"])}</div>`);
+      document.getElementById("container").insertAdjacentHTML("beforeend", `<hr /><div style="color:grey" id="bottom_info_html">${marked.parse(blog["底部信息（格式为markdown）"])}<div style="margin-bottom: 400px"></div></div>`);
     }
 
     function execute_custom_js() {

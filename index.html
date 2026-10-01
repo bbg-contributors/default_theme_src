@@ -651,6 +651,31 @@
         window.dispatchEvent(walineReady);
     })
 
+    let isRustalineReady = false;
+    const rustalineReady = new CustomEvent("rustalineReady");
+    let isRustalineLoading = false;
+
+    // rustaline 的 SDK 由用户自建的 rustaline 服务器提供（${serverurl}/sdk/rustaline.js），
+    // 地址只有在博客数据加载完成后才能确定，因此不能像 valine/waline 那样在启动时
+    // 无条件预加载，只能在首次需要渲染评论时再动态加载。
+    function loadRustalineComment(onReady) {
+        if (isRustalineReady) {
+            onReady();
+        } else {
+            window.addEventListener("rustalineReady", onReady);
+            if (isRustalineLoading === false) {
+                isRustalineLoading = true;
+                loadJsDeferred(
+                    blog["全局评论设置"]["rustaline设置"]["serverurl"] + "/sdk/rustaline.js",
+                    () => {
+                        isRustalineReady = true;
+                        window.dispatchEvent(rustalineReady);
+                    }
+                );
+            }
+        }
+    }
+
 
     function toggle_theme_setting() {
         theme_setting_dialog.toggle();
@@ -1413,7 +1438,8 @@
                 if (
                     (blog["全局评论设置"]["启用valine评论"] ||
                         blog["全局评论设置"]["启用disqus评论"] ||
-                        blog["全局评论设置"]["启用waline评论"]) &&
+                        blog["全局评论设置"]["启用waline评论"] ||
+                        blog["全局评论设置"]["启用rustaline评论"]) &&
                     blog["文章列表"][article_id]["启用评论"]
                 ) {
                     document.querySelector(
@@ -1489,6 +1515,23 @@
 
                 }
 
+                if (
+                    blog["全局评论设置"]["启用rustaline评论"] &&
+                    blog["文章列表"][article_id]["启用评论"]
+                ) {
+                    const loadComment = ()=>{
+                        new Rustaline({
+                            el: "#vcomments",
+                            server: blog["全局评论设置"]["rustaline设置"]["serverurl"],
+                            url: "article=" + blog["文章列表"][article_id]["文件名"],
+                            lang: blog["网站语言"] === "简体中文" ? "zh-CN" : (blog["网站语言"] === "English" ? "en" : "auto"),
+                            darkMode: "auto",
+                        });
+                    }
+
+                    loadRustalineComment(loadComment);
+                }
+
 
             })
     }
@@ -1521,7 +1564,8 @@
         if (
             (blog["全局评论设置"]["启用valine评论"] ||
                 blog["全局评论设置"]["启用disqus评论"] ||
-                blog["全局评论设置"]["启用waline评论"]) &&
+                blog["全局评论设置"]["启用waline评论"] ||
+                blog["全局评论设置"]["启用rustaline评论"]) &&
             blog["友人帐页面允许评论"]
         ) {
             document.querySelector(
@@ -1584,6 +1628,23 @@
             } else {
                 window.addEventListener("walineReady", loadComment);
             }
+        }
+
+        if (
+            blog["全局评论设置"]["启用rustaline评论"] &&
+            blog["友人帐页面允许评论"]
+        ) {
+            const loadComment = ()=>{
+                new Rustaline({
+                    el: "#vcomments",
+                    server: blog["全局评论设置"]["rustaline设置"]["serverurl"],
+                    url: "internal=friendbook",
+                    lang: blog["网站语言"] === "简体中文" ? "zh-CN" : (blog["网站语言"] === "English" ? "en" : "auto"),
+                    darkMode: "auto",
+                });
+            }
+
+            loadRustalineComment(loadComment);
         }
     }
 
@@ -1787,7 +1848,8 @@
                 if (
                     (blog["全局评论设置"]["启用valine评论"] ||
                         blog["全局评论设置"]["启用disqus评论"] ||
-                        blog["全局评论设置"]["启用waline评论"]) &&
+                        blog["全局评论设置"]["启用waline评论"] ||
+                        blog["全局评论设置"]["启用rustaline评论"]) &&
                     blog["页面列表"][page_id]["启用评论"]
                 ) {
                     document.querySelector(
@@ -1860,6 +1922,23 @@
                         window.addEventListener("walineReady", loadComment);
                     }
 
+                }
+
+                if (
+                    blog["全局评论设置"]["启用rustaline评论"] &&
+                    blog["页面列表"][page_id]["启用评论"]
+                ) {
+                    const loadComment = ()=>{
+                        new Rustaline({
+                            el: "#vcomments",
+                            server: blog["全局评论设置"]["rustaline设置"]["serverurl"],
+                            url: "page=" + blog["页面列表"][page_id]["文件名"],
+                            lang: blog["网站语言"] === "简体中文" ? "zh-CN" : (blog["网站语言"] === "English" ? "en" : "auto"),
+                            darkMode: "auto",
+                        });
+                    }
+
+                    loadRustalineComment(loadComment);
                 }
             });
     }
